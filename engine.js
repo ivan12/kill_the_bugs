@@ -45,18 +45,27 @@ function pauseGame() {
     ctx.fillText(`GAME PAUSED: PRESS ENTER TO RETURN`, 230, 300);
 }
 
+function drawBackground() {
+    let background = null;
+
+    /* Draw default imgBG or BossBG */
+    background = boss ? backgroundBossImage : backgroundImage;
+
+    /* Draw gameOver bg */
+    if (current_screen === 'GAME_OVER') {
+        background = backgroundGameOverImage;
+    }
+
+    ctx.drawImage(background, 0, 0, backgroundImage.width, backgroundImage.height);
+}
+
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Render background
-    ctx.drawImage(
-        boss ? backgroundBossImage : backgroundImage,
-        0,
-        0,
-        backgroundImage.width,
-        backgroundImage.height
-    );
+    drawBackground();
 
+    // Render game
     if (current_screen === 'RUN_GAME') {
         runningGame();
     }

@@ -8,6 +8,9 @@ backgroundImage.src = './imgs/bg.png';
 const backgroundBossImage = new Image(1000, 800); // Using optional size for image
 backgroundBossImage.src = './imgs/bgBoss.png';
 
+const backgroundGameOverImage = new Image(1000, 800); // Using optional size for image
+backgroundGameOverImage.src = './imgs/bgGameOver.png';
+
 const SCREENS = {
     game_over: 'GAME_OVER',
     pause: 'PAUSE',
@@ -15,7 +18,7 @@ const SCREENS = {
     start: 'START',
 };
 
-let current_screen = 'START';
+let current_screen = 'GAME_OVER';
 
 const player = {
     x: canvas.width / 2,
