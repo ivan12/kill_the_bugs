@@ -1,5 +1,4 @@
 function drawPlayer() {
-    ctx.stroke();
     let playerHeight = player.height * (player.health / 100);
     ctx.fillStyle = '#00F';
     ctx.fillRect(
@@ -13,6 +12,14 @@ function drawPlayer() {
         player.y - player.height / 2,
         player.width,
         player.height
+    );
+    ctx.fillStyle = '#000';
+    ctx.font = '40px';
+    ctx.fillText(
+        `${boss ? '' : player.points}`,
+        player.x - player.width / 2 + 10,
+        player.y + player.height / 3,
+        40
     );
     ctx.stroke();
 }
@@ -28,12 +35,12 @@ function updatePlayer() {
     if (player.y < 0) player.y = 0;
     if (player.y > canvas.height) player.y = canvas.height;
 
-    // Verificar se o jogador está dentro da Safe Zone
+    // Verify if player is in safeZone
     const distanceToSafeZone = Math.sqrt(
         (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
     );
     if (distanceToSafeZone < safeZone.radius) {
-        // Recupe vida
+        // Recover life
         setTimeout(() => {
             canRecoverLife = true;
         }, 2000);
@@ -43,35 +50,46 @@ function updatePlayer() {
             player.health += 5;
         }
 
-        // Eliminar inimigos dentro da Safe Zone
+        // Kill enemies inside the Safe Zone
+        let isEnemyOutside = true;
         enemies = enemies.filter(enemy => {
             const distanceToEnemy = Math.sqrt(
                 (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
             );
-            return distanceToEnemy > safeZone.radius + enemy.width / 2;
+            isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
+            if (!isEnemyOutside && safeZone.teamPoints >= enemy.points) {
+                safeZone.teamPoints -= enemy.points;
+            }
+
+            return isEnemyOutside;
         });
     }
 
-    // Verificar colisão com inimigos
+    // Verify if enemies collided to the player
     enemies.forEach(enemy => {
         const dx = player.x - enemy.x;
         const dy = player.y - enemy.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance < player.width / 2 + enemy.width / 2 && canTakeDamage) {
-            // Tocou no jogador, causar dano
-            player.health -= 10; // Ajuste a quantidade de dano conforme necessário
+            // damage player anemy
+            player.health -= 10;
             canTakeDamage = false;
 
-            // Aplicar blur vermelho na tela
+            // blur effect
             canvas.style.filter = 'blur(5px) brightness(2)';
 
+            if (enemy.points < player.points) {
+                player.points = player.points - enemy.points;
+                enemies = enemies.filter(enemyParam => enemyParam !== enemy);
+            }
+
             setTimeout(() => {
-                // Remover o blur após 0.5 segundos
+                // Remove blur after 0.5 seconds
                 canvas.style.filter = 'blur(0)';
             }, 500);
 
-            // Permitir que o jogador receba dano novamente após 2 segundos
+            // Allow player take damage after 2 seconds
             setTimeout(() => {
                 canTakeDamage = true;
             }, 1000);

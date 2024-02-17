@@ -1,6 +1,6 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
-        ctx.fillStyle = '#0F0';
+        ctx.fillStyle = '#FF0000';
         ctx.fillRect(
             enemy.x - enemy.width / 2,
             enemy.y - enemy.height / 2,
@@ -8,7 +8,13 @@ function drawEnemies() {
             enemy.height
         );
         ctx.fillStyle = '#0F00F0';
-        ctx.fillText('CX', enemy.x - enemy.width / 2, enemy.y + enemy.height / 3, 40);
+        ctx.font = '20px';
+        ctx.fillText(
+            `CX ${boss ? '' : enemy.points}`,
+            enemy.x - enemy.width / 2,
+            enemy.y + enemy.height / 3,
+            40
+        );
     });
 }
 
@@ -34,6 +40,7 @@ function spawnEnemy() {
         width: 20,
         height: 20,
         speed: 1,
+        points: getRandomFibonacciNumber(),
     };
     enemies.push(enemy);
 }

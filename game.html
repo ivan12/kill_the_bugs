@@ -4,94 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BUGS CX - SURVIVOR</title>
-    <style>
-        body {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #222;
-            overflow: hidden;
-        }
-        canvas {
-            border: 2px solid #fff;
-            filter: blur(0);
-            transition: filter 0.5s ease-out;
-        }
-
-        #nextWaveTimer {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #FFF;
-            font-size: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Render Game -->
     <canvas id="gameCanvas" width="1000" height="800"></canvas>
+    
+    <!-- Info Display waves Time -->
     <div id="nextWaveTimer"></div>
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        const SCREENS = { 
-            start: 'START', 
-            run: 'RUN_GAME', 
-            game_over: 'GAME_OVER', 
-            pause: 'PAUSE'
-        };
-
-        let current_screen = 'START'
-
-        const player = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            width: 30,
-            height: 30,
-            speed: 25,
-            health: 100,
-        };
-
-        const safeZone = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            radius: 50,
-        };
-
-        let enemies = [];
-        let blurIntensity = 0;
-
-        let canTakeDamage = true;
-        let canRecoverLife = true;
-
-        /*waves config*/
-        let wave = 1;
-        const wavesPerZoneChange = 3; // Número de waves antes de mudar de zona
-        const WAVES_TIME = 3;
-        let nextWaveTimer = WAVES_TIME; // Tempo em segundos até a próxima wave
-        let wavesUntilZoneChange = wavesPerZoneChange;
-
-        /*Config Boss*/
-        let boss = null;
-        const bossSpeed = 20;
-        let bossMaxHealth = 50;
-        let canBossTakeDamage = true;
-
-        /* BG matrix */
-        const matrixText = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const columns = canvas.width / 10;
-        const drops = [];
-    </script>
+    
+    <!-- Modules Game -->
+    <script src="utils.js"></script>
+    <script src="initializeVars.js"></script>
     <script src="player.js"></script>
     <script src="enemy.js"></script>
     <script src="boss.js"></script>
-    <script src="safe_zone.js"></script>
+    <script src="safeZone.js"></script>
     <script src="waves.js"></script>
-    <script src="screen_start.js"></script>
-    <script src="screen_game_over.js"></script>
-    <script src="matrix_background.js"></script>
+    <script src="screenStart.js"></script>
+    <script src="screenGameOver.js"></script>
+    <script src="matrixBackground.js"></script>
     <script src="engine.js"></script>
 </body>
 </html>

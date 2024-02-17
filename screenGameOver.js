@@ -1,6 +1,6 @@
 function drawGameOverScreen() {
-    ctx.fillStyle = '#FFF';
-    ctx.font = '16px Arial';
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 36px Arial';
     ctx.fillText(`GAME OVER`, canvas.width - canvas.width / 2 - 120, 350);
     ctx.fillText(`PRESS ENTER TO RESTART`, canvas.width - canvas.width / 2 - 120, 400);
     ctx.fillText(`PRESS ASC TO HOME SCREEN`, canvas.width - canvas.width / 2 - 120, 450);

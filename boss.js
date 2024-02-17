@@ -2,7 +2,7 @@ function drawBoss() {
     if (boss) {
         let bossHeight = boss.height * (boss.health / bossMaxHealth);
 
-        // Desenhar o boss
+        // draw boss
         ctx.stroke();
         ctx.fillStyle = '#FF0000';
         ctx.fillRect(
@@ -17,7 +17,7 @@ function drawBoss() {
         ctx.stroke();
         ctx.fillStyle = '#0F00F0';
 
-        // Mostrar a vida do boss na tela
+        // show info boss
         ctx.fillStyle = '#FFF';
         ctx.fillText(`HOT FIX Vida: ${boss.health}`, 10, 60);
         ctx.stroke();
@@ -26,7 +26,7 @@ function drawBoss() {
 
 function updateBoss() {
     if (boss) {
-        // Movimento aleatório do boss
+        // Random moves boss
         boss.x += (Math.random() - 0.5) * boss.speed;
         boss.y += (Math.random() - 0.5) * boss.speed;
 
@@ -45,11 +45,11 @@ function updateBoss() {
             }
         }
 
-        // Verificar se o boss está morto
+        // Verify if boss is alive
         if (boss.health <= 0) {
             boss = null;
             wave++;
-            // MATOU O BOSS MATA OS CXs NA WAVE
+            // KILL THE HOTFIX KILL ALL CXs
             enemies = [];
         }
     }
