@@ -37,6 +37,7 @@ function updateBoss() {
 
             if (distance < player.width / 2 + boss.width / 2) {
                 boss.health -= 10;
+                player.health -= 15;
                 canBossTakeDamage = false;
 
                 setTimeout(() => {
