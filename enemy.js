@@ -1,5 +1,6 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
+        drawVisionRadius(enemy); // Adicione esta linha para desenhar o raio de visão
         ctx.fillStyle = '#FF0000';
         ctx.fillRect(
             enemy.x - enemy.width / 2,
@@ -25,11 +26,15 @@ function moveEnemy(enemy) {
     if (isPlayerInsideSafeZone()) {
         wanderEnemy(enemy, speed);
     } else {
-        // Persegue o jogador quando fora da safezone
-        const dx = player.x - enemy.x;
-        const dy = player.y - enemy.y;
-        const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
-        attackPlayer(enemy, dx, dy, distanceToPlayer, speed);
+        // Persegue o jogador apenas se estiver dentro do raio de visão
+        if (canSeePlayer(enemy)) {
+            const dx = player.x - enemy.x;
+            const dy = player.y - enemy.y;
+            const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+            attackPlayer(enemy, dx, dy, distanceToPlayer, speed);
+        } else {
+            wanderEnemy(enemy, speed);
+        }
     }
 
     // Mantém os inimigos afastados das bordas
@@ -84,6 +89,25 @@ function isPlayerInsideSafeZone() {
     const dy = player.y - safeZone.y;
     const distanceToSafeZone = Math.sqrt(dx * dx + dy * dy);
     return distanceToSafeZone <= safeZone.radius;
+}
+
+function canSeePlayer(enemy) {
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+    const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+
+    // Defina o raio de visão do inimigo
+    const visionRadius = 150;
+
+    return distanceToPlayer <= visionRadius;
+}
+
+function drawVisionRadius(enemy) {
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, 150, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+    ctx.stroke();
+    ctx.closePath();
 }
 
 function updateEnemies() {

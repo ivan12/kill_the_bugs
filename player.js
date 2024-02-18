@@ -17,7 +17,7 @@ function drawPlayer() {
     ctx.font = '40px';
     ctx.fillText(
         `${boss ? '' : player.points}`,
-        player.x - player.width / 2 + 10,
+        player.x - player.width / 2 + 8,
         player.y + player.height / 3,
         40
     );
@@ -57,7 +57,7 @@ function updatePlayer() {
                 (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
             );
             isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
-            if (!isEnemyOutside && safeZone.teamPoints >= enemy.points) {
+            if (!isEnemyOutside) {
                 safeZone.teamPoints -= enemy.points;
             }
 
@@ -79,7 +79,7 @@ function updatePlayer() {
             // blur effect
             canvas.style.filter = 'blur(5px) brightness(2)';
 
-            if (enemy.points < player.points) {
+            if (enemy.points <= player.points) {
                 player.points = player.points - enemy.points;
                 enemies = enemies.filter(enemyParam => enemyParam !== enemy);
             }
