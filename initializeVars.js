@@ -1,6 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+const center = { x: canvas.width / 2, y: canvas.height / 2 };
+
 /* background image */
 const backgroundImage = new Image(1000, 800); // Using optional size for image
 backgroundImage.src = './imgs/bg.png';
@@ -18,7 +20,7 @@ const SCREENS = {
     start: 'START',
 };
 
-let current_screen = 'GAME_OVER';
+let current_screen = 'START';
 
 const player = {
     x: canvas.width / 2,
