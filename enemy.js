@@ -18,65 +18,91 @@ function drawEnemies() {
     });
 }
 
-function updateEnemies() {
-    enemies.forEach(enemy => {
+function moveEnemy(enemy) {
+    const speed = 1;
+
+    // Movimentação aleatória quando o jogador está na safezone
+    if (isPlayerInsideSafeZone()) {
+        wanderEnemy(enemy, speed);
+    } else {
+        // Persegue o jogador quando fora da safezone
         const dx = player.x - enemy.x;
         const dy = player.y - enemy.y;
         const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+        attackPlayer(enemy, dx, dy, distanceToPlayer, speed);
+    }
 
-        const distanceToSafeZone = Math.sqrt(
-            (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
-        );
+    // Mantém os inimigos afastados das bordas
+    moveEnemyAwayFromEdge(enemy);
+}
 
-        // small AI
-        if (distanceToSafeZone > safeZone.radius) {
-            attackPlayer(enemy, dx, dy, distanceToPlayer);
-        } else if (distanceToPlayer < safeZone.radius) {
-            // Leave player
-            fleePlayer(enemy, dx, dy, distanceToPlayer);
-        } else {
-            fleePlayer(enemy, dx, dy, distanceToPlayer);
-        }
-        // Verify limits screen
-        enemy.x = Math.max(0, Math.min(enemy.x, canvas.width - enemy.width));
-        enemy.y = Math.max(0, Math.min(enemy.y, canvas.height - enemy.height));
+function moveEnemyAwayFromEdge(enemy, margin = 50) {
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
 
-        // close the border screen!!!
-        const distanceToCenter = Math.sqrt((enemy.x - center.x) ** 2 + (enemy.y - center.y) ** 2);
-        const minDistanceToCenter = 50;
+    if (enemy.x < margin) {
+        enemy.x += margin - enemy.x;
+    } else if (enemy.x > canvasWidth - margin) {
+        enemy.x -= enemy.x - (canvasWidth - margin);
+    }
 
-        if (distanceToCenter < minDistanceToCenter) {
-            const angleToCenter = Math.atan2(center.y - enemy.y, center.x - enemy.x);
-            enemy.x += Math.cos(angleToCenter) * enemy.speed;
-            enemy.y += Math.sin(angleToCenter) * enemy.speed;
-        }
+    if (enemy.y < margin) {
+        enemy.y += margin - enemy.y;
+    } else if (enemy.y > canvasHeight - margin) {
+        enemy.y -= enemy.y - (canvasHeight - margin);
+    }
+}
+
+function wanderEnemy(enemy, speed) {
+    const changeDirectionProbability = 0.02;
+
+    // Altera a direção aleatoriamente com base na probabilidade
+    if (Math.random() < changeDirectionProbability) {
+        const angle = Math.random() * 2 * Math.PI;
+        enemy.directionX = Math.cos(angle);
+        enemy.directionY = Math.sin(angle);
+    }
+
+    // Move o inimigo na direção atual
+    enemy.x += enemy.directionX * speed;
+    enemy.y += enemy.directionY * speed;
+
+    // Mantém o inimigo dentro dos limites da tela
+    enemy.x = Math.max(0, Math.min(enemy.x, canvas.width - enemy.width));
+    enemy.y = Math.max(0, Math.min(enemy.y, canvas.height - enemy.height));
+}
+
+function attackPlayer(enemy, dx, dy, distance, speed) {
+    if (distance > 0) {
+        enemy.x += (dx / distance) * speed;
+        enemy.y += (dy / distance) * speed;
+    }
+}
+
+function isPlayerInsideSafeZone() {
+    const dx = player.x - safeZone.x;
+    const dy = player.y - safeZone.y;
+    const distanceToSafeZone = Math.sqrt(dx * dx + dy * dy);
+    return distanceToSafeZone <= safeZone.radius;
+}
+
+function updateEnemies() {
+    enemies.forEach(enemy => {
+        moveEnemy(enemy);
     });
 }
 
-function attackPlayer(enemy, dx, dy, distance) {
-    if (distance > 0) {
-        enemy.x += (dx / distance) * enemy.speed;
-        enemy.y += (dy / distance) * enemy.speed;
-    }
-}
-
-function fleePlayer(enemy, dx, dy, distance) {
-    if (distance > 0) {
-        enemy.x -= (dx / distance) * enemy.speed;
-        enemy.y -= (dy / distance) * enemy.speed;
-    }
-}
-
 function spawnEnemy() {
-    const angle = Math.random() * Math.PI * 2;
-    const radius = Math.min(canvas.width - 20, canvas.height - 20);
+    const angle = Math.random() * 2 * Math.PI;
     const enemy = {
-        x: safeZone.x + Math.cos(angle) * radius,
-        y: safeZone.y + Math.sin(angle) * radius,
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
         width: 20,
         height: 20,
         speed: 1,
         points: getRandomFibonacciNumber(),
+        directionX: Math.cos(angle),
+        directionY: Math.sin(angle),
     };
     enemies.push(enemy);
 }
