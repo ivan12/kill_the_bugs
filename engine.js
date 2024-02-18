@@ -18,18 +18,7 @@ function runningGame() {
     }
 
     // info screen
-    ctx.fillStyle = '#1C1C1C';
-    ctx.font = 'bold 20px Arial';
-    ctx.fillText(`Player Vida: ${player.health}`, 10, 20);
-    if (!boss) {
-        ctx.fillText(`Sprint: ${wave}`, canvas.width - 200, 50);
-        ctx.fillText(`Total de Bugs de CX: ${enemies.length}`, 10, 60);
-        ctx.fillText(`FIQUE COM SUA EQUIPE`, 10, 100);
-        if (nextWaveTimer > 0)
-            ctx.fillText(`Next Sprint in: ${nextWaveTimer.toFixed(1)}s`, canvas.width - 200, 20);
-    } else {
-        ctx.fillText(`MATE O HotFix!`, 10, 100);
-    }
+    drawInfoHUD();
 }
 
 function pauseGame() {

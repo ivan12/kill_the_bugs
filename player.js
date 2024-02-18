@@ -1,18 +1,26 @@
 function drawPlayer() {
-    let playerHeight = player.height * (player.health / 100);
-    ctx.fillStyle = '#00F';
+    const borderWidth = 3; // Ajuste conforme necessário
+
+    // draw player
+    ctx.fillStyle = '#7B68EE';
     ctx.fillRect(
-        player.x - player.width / 2,
-        player.y - player.height / 2 + (player.height - playerHeight),
-        player.width,
-        playerHeight
-    );
-    ctx.rect(
         player.x - player.width / 2,
         player.y - player.height / 2,
         player.width,
         player.height
     );
+
+    // Desenha o contorno da barra de vida
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(
+        player.x - player.width / 2,
+        player.y - player.height / 2,
+        player.width,
+        player.height
+    );
+
+    // Desenha o texto de pontuação
     ctx.fillStyle = '#000';
     ctx.font = '40px';
     ctx.fillText(
@@ -21,7 +29,6 @@ function drawPlayer() {
         player.y + player.height / 3,
         40
     );
-    ctx.stroke();
 }
 
 function updatePlayer() {
@@ -56,6 +63,15 @@ function updatePlayer() {
             const distanceToEnemy = Math.sqrt(
                 (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
             );
+
+            /* if enemy more strong than safeZone */
+            if (enemy.points > safeZone.teamPoints) {
+                enemy.points -= safeZone.teamPoints;
+                safeZone.teamPoints -= enemy.points;
+                return;
+            }
+
+            /* if inside remove points and remove enemy */
             isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
             if (!isEnemyOutside) {
                 safeZone.teamPoints -= enemy.points;
