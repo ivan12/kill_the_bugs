@@ -31,6 +31,22 @@ function drawPlayer() {
     );
 }
 
+let recoveryTimeout;
+
+function recoverLife() {
+    if (player.health < 100) {
+        player.health += 5;
+
+        // Schedule the next recovery only if no timeout is currently active
+        if (!recoveryTimeout) {
+            recoveryTimeout = setTimeout(() => {
+                recoveryTimeout = null;  // Reset the timeout reference
+                recoverLife();
+            }, 20000);
+        }
+    }
+}
+
 function updatePlayer() {
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
@@ -47,15 +63,7 @@ function updatePlayer() {
         (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
     );
     if (distanceToSafeZone < safeZone.radius) {
-        // Recover life
-        setTimeout(() => {
-            canRecoverLife = true;
-        }, 2000);
-
-        if (player.health < 100 && canRecoverLife) {
-            canRecoverLife = false;
-            player.health += 5;
-        }
+        recoverLife();
 
         // Kill enemies inside the Safe Zone
         let isEnemyOutside = true;
@@ -81,18 +89,21 @@ function updatePlayer() {
         });
     }
 
-    // Verify if enemies collided to the player
+    // Verify if enemies collided with the player
     enemies.forEach(enemy => {
         const dx = player.x - enemy.x;
         const dy = player.y - enemy.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < player.width / 2 + enemy.width / 2 && canTakeDamage) {
-            // damage player anemy
+        // min distance to consider colision
+        const minCollisionDistance = 2;
+
+        if (distance - minCollisionDistance < player.width / 2 + enemy.width / 2 && canTakeDamage) {
+            // Damage the player
             player.health -= 10;
             canTakeDamage = false;
 
-            // blur effect
+            // Blur effect
             canvas.style.filter = 'blur(5px) brightness(2)';
 
             if (enemy.points <= player.points) {
@@ -105,7 +116,7 @@ function updatePlayer() {
                 canvas.style.filter = 'blur(0)';
             }, 500);
 
-            // Allow player take damage after 2 seconds
+            // Allow player to take damage after 2 seconds
             setTimeout(() => {
                 canTakeDamage = true;
             }, 1000);

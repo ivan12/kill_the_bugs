@@ -78,9 +78,24 @@ function wanderEnemy(enemy, speed) {
 }
 
 function attackPlayer(enemy, dx, dy, distance, speed) {
+    const minDistance = 1; // Distância mínima entre o jogador e o inimigo
+    const playerRadius = Math.max(player.width / 2, player.height / 2);
+    const enemyRadius = Math.max(enemy.width / 2, enemy.height / 2);
+
     if (distance > 0) {
-        enemy.x += (dx / distance) * speed;
-        enemy.y += (dy / distance) * speed;
+        const moveX = (dx / distance) * speed;
+        const moveY = (dy / distance) * speed;
+
+        // Verifica se a próxima posição não colide com o jogador
+        const nextX = enemy.x + moveX;
+        const nextY = enemy.y + moveY;
+
+        const distanceToPlayerCenter = Math.sqrt((nextX - player.x) ** 2 + (nextY - player.y) ** 2);
+
+        if (distanceToPlayerCenter > playerRadius + enemyRadius + minDistance) {
+            enemy.x = nextX;
+            enemy.y = nextY;
+        }
     }
 }
 

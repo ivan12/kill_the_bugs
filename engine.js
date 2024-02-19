@@ -7,9 +7,9 @@ function runningGame() {
     updateWaves();
 
     // Render do game
+    drawSafeZone();
     drawPlayer();
     drawEnemies();
-    drawSafeZone();
     drawMatrix();
 
     if (boss) {
@@ -40,6 +40,11 @@ function drawBackground() {
     /* Draw default imgBG or BossBG */
     background = boss ? backgroundBossImage : backgroundImage;
 
+    /* Draw startGame bg */
+    if (current_screen === 'START') {
+        background = startGameImage;
+    }
+
     /* Draw gameOver bg */
     if (current_screen === 'GAME_OVER') {
         background = backgroundGameOverImage;
@@ -48,28 +53,35 @@ function drawBackground() {
     ctx.drawImage(background, 0, 0, backgroundImage.width, backgroundImage.height);
 }
 
-function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+/* game update loop - core */
+function gameLoop(timestamp) {
+    const deltaTime = timestamp - lastTimestamp;
 
-    // Render background
-    drawBackground();
+    if (deltaTime >= frameDuration) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Render game
-    if (current_screen === 'RUN_GAME') {
-        runningGame();
-    }
+        // Render background
+        drawBackground();
 
-    if (current_screen === 'PAUSE') {
-        drawMatrix();
-        pauseGame();
-    }
+        // Render game
+        if (current_screen === 'RUN_GAME') {
+            runningGame();
+        }
 
-    if (current_screen === 'START') {
-        drawStartScreen();
-    }
+        if (current_screen === 'PAUSE') {
+            drawMatrix();
+            pauseGame();
+        }
 
-    if (current_screen === 'GAME_OVER') {
-        drawGameOverScreen();
+        if (current_screen === 'START') {
+            drawStartScreen();
+        }
+
+        if (current_screen === 'GAME_OVER') {
+            drawGameOverScreen();
+        }
+
+        lastTimestamp = timestamp - (deltaTime % frameDuration);
     }
 
     requestAnimationFrame(gameLoop);
@@ -77,38 +89,51 @@ function gameLoop() {
 
 document.addEventListener('keydown', e => {
     if (current_screen === 'RUN_GAME') {
+        let newX = player.x;
+        let newY = player.y;
+
         switch (e.key) {
             case 'w':
-                player.y -= player.speed;
-                break;
             case 'ArrowUp':
-                player.y -= player.speed;
+                newY -= player.speed;
                 break;
             case 's':
-                player.y += player.speed;
-                break;
             case 'ArrowDown':
-                player.y += player.speed;
+                newY += player.speed;
                 break;
             case 'a':
-                player.x -= player.speed;
-                break;
             case 'ArrowLeft':
-                player.x -= player.speed;
+                newX -= player.speed;
                 break;
             case 'd':
-                player.x += player.speed;
-                break;
             case 'ArrowRight':
-                player.x += player.speed;
+                newX += player.speed;
                 break;
+        }
+
+        // Verifica se o novo posicionamento do jogador colide com algum inimigo
+        let collisionDetected = false;
+        enemies.forEach(enemy => {
+            const dx = newX - enemy.x;
+            const dy = newY - enemy.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < player.width / 2 + enemy.width / 2) {
+                collisionDetected = true;
+            }
+        });
+
+        // Se não houver colisão, atualiza a posição do jogador
+        if (!collisionDetected) {
+            player.x = newX;
+            player.y = newY;
         }
     }
 });
 
 initializeWaves();
 
-gameLoop();
+requestAnimationFrame(gameLoop);
 
 document.addEventListener('keydown', e => {
     if (current_screen === 'RUN_GAME' || current_screen === 'PAUSE') {

@@ -3,6 +3,11 @@ const ctx = canvas.getContext('2d');
 
 const center = { x: canvas.width / 2, y: canvas.height / 2 };
 
+/* frame hate */
+let lastTimestamp = 0;
+const targetFrameRate = 60; // Adjust this value to your desired frame rate
+const frameDuration = 1000 / targetFrameRate;
+
 /* background image */
 const backgroundImage = new Image(1000, 800); // Using optional size for image
 backgroundImage.src = './imgs/bg.png';
@@ -10,8 +15,14 @@ backgroundImage.src = './imgs/bg.png';
 const backgroundBossImage = new Image(1000, 800); // Using optional size for image
 backgroundBossImage.src = './imgs/bgBoss.png';
 
+const startGameImage = new Image(408, 395); // Using optional size for image
+startGameImage.src = './imgs/bgStart.png';
+
 const backgroundGameOverImage = new Image(1000, 800); // Using optional size for image
 backgroundGameOverImage.src = './imgs/bgGameOver.png';
+
+const logoGameImage = new Image(408, 395); // Using optional size for image
+logoGameImage.src = './imgs/logoGame.png';
 
 const SCREENS = {
     game_over: 'GAME_OVER',

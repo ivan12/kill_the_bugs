@@ -26,18 +26,21 @@ function drawTextInfo() {
         }
     }
 
-    ctx.fillStyle = `rgba(0, 0, 0, ${globalAlpha})`;
-    ctx.font = 'bold 30px Arial';
+    ctx.fillStyle = `rgba(255, 255, 255, ${globalAlpha})`;
+    ctx.strokeStyle = `rgba(255, 255, 255, ${globalAlpha})`;
+    ctx.font = 'bold 25px Arial';
 
     const text = 'PRESS ENTER TO START';
     const textWidth = ctx.measureText(text).width;
     const textX = (canvas.width - textWidth) / 2;
-    const textY = 350;
+    const textY = 460;
 
     ctx.fillText(text, textX, textY);
+    ctx.strokeText(text, textX, textY);
 }
 
 function drawStartScreen() {
+    ctx.drawImage(logoGameImage, 300, 50, logoGameImage.width, logoGameImage.height);
     setInterval(drawTextInfo(), 80);
 }
 
