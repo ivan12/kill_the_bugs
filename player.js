@@ -35,14 +35,12 @@ let recoveryTimeout;
 
 function recoverLife() {
     if (player.health < 100) {
-        player.health += 5;
+        player.health = Math.min(100, player.health + 5);
 
-        // Schedule the next recovery only if no timeout is currently active
         if (!recoveryTimeout) {
             recoveryTimeout = setTimeout(() => {
-                recoveryTimeout = null; // Reset the timeout reference
-                recoverLife();
-            }, 20000);
+                recoveryTimeout = null;
+            }, 2000);
         }
     }
 }
@@ -97,7 +95,7 @@ function updatePlayer() {
     const distanceToSafeZone = Math.sqrt(
         (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
     );
-    if (distanceToSafeZone < safeZone.radius) {
+    if (distanceToSafeZone < safeZone.radius && !recoveryTimeout) {
         recoverLife();
         killEnemiesInsideSafeZone();
     }

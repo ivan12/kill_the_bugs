@@ -25,7 +25,9 @@ timeNextWave = setInterval(() => {
                 spawnBoss();
                 nextWaveCalculateTime = false;
             } else {
-                for (let i = 0; i < wave * 5; i++) {
+                /* Gera numero de inimigos de 3 a 10 por wave */
+                let numEnemies = Math.floor(Math.random() * 8) + 3;
+                for (let i = 0; i < numEnemies; i++) {
                     spawnEnemy();
                 }
                 nextWaveCalculateTime = false;

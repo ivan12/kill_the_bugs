@@ -134,14 +134,15 @@ function updateEnemies() {
 
 function spawnEnemy() {
     const angle = Math.random() * 2 * Math.PI;
+    const priority = getPriority();
     const enemy = {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         width: 20,
         height: 20,
-        speed: 1,
+        speed: priority * 2,
         points: getRandomFibonacciNumber(),
-        priority: getPriority(),
+        priority: priority,
         directionX: Math.cos(angle),
         directionY: Math.sin(angle),
     };
