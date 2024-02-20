@@ -7,10 +7,23 @@ function runningGame() {
     updateWaves();
 
     // Render do game
+    ctx.save();
     drawSafeZone();
     drawPlayer();
     drawEnemies();
     drawMatrix();
+
+    if (!boss) {
+        /* show or not lightEffect */
+        if (lightShadowOn) {
+            drawLightingEffect();
+        }
+        /* show or not miniMap */
+        if (miniMapOn) {
+            drawMinimap();
+        }
+    }
+    ctx.restore();
 
     if (boss) {
         updateBoss();

@@ -1,3 +1,7 @@
+/* global vars need start in keyboard */
+let miniMapOn = true;
+let lightShadowOn = true;
+
 document.addEventListener('keydown', e => {
     if (current_screen === 'RUN_GAME') {
         let newX = player.x;
@@ -19,6 +23,12 @@ document.addEventListener('keydown', e => {
             case 'd':
             case 'ArrowRight':
                 newX += player.speed;
+                break;
+            case 'm':
+                miniMapOn = !miniMapOn;
+                break;
+            case 'l':
+                lightShadowOn = !lightShadowOn
                 break;
         }
 

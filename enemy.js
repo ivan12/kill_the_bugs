@@ -1,5 +1,3 @@
-const colorsPriority = ['rgb(0,128,0)', 'rgb(192,192,192)', 'rgb(255,0,0)'];
-
 function drawEnemies() {
     enemies.forEach(enemy => {
         drawVisionRadius(enemy); // Adicione esta linha para desenhar o raio de visão

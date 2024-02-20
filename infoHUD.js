@@ -33,7 +33,7 @@ function drawInfoHUD() {
         ctx.fillStyle = '#FFF';
         ctx.font = 'bold 20px Arial';
 
-        ctx.fillText(`Sprint: ${wave}`, canvas.width - 150, 30);
+        ctx.fillText(`Sprint: ${wave}`, canvas.width - 100, 30);
         ctx.fillText(`Bugs de CX: ${enemies.length}`, 20, 30);
 
         ctx.fillText(`Dica: Fique com sua equipe`, 360, 780);
@@ -42,7 +42,6 @@ function drawInfoHUD() {
             ctx.font = 'bold 16px Arial';
             ctx.fillText(`Next Sprint: ${nextWaveTimer.toFixed(1)}s`, canvas.width - 150, 55);
         }
-
     } else {
         ctx.fillText(`MATE O HotFix!`, 10, 130);
     }

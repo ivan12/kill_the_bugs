@@ -51,6 +51,8 @@ const safeZone = {
     teamPoints: simulateTeamPoints(5),
 };
 
+/* Enemies */
+const colorsPriority = ['rgb(0,128,0)', 'rgb(192,192,192)', 'rgb(255,0,0)'];
 let enemies = [];
 let blurIntensity = 0;
 
