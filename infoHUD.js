@@ -42,6 +42,7 @@ function drawInfoHUD() {
             ctx.font = 'bold 16px Arial';
             ctx.fillText(`Next Sprint: ${nextWaveTimer.toFixed(1)}s`, canvas.width - 150, 55);
         }
+
     } else {
         ctx.fillText(`MATE O HotFix!`, 10, 130);
     }

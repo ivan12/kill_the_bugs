@@ -17,18 +17,3 @@ function clearGameVars() {
     nextWaveTimer = 3;
     wave = 1;
 }
-
-document.addEventListener('keydown', e => {
-    if (current_screen === 'GAME_OVER') {
-        switch (e.key) {
-            case 'Enter':
-                clearGameVars();
-                current_screen = 'RUN_GAME';
-                break;
-            case 'Escape':
-                clearGameVars();
-                current_screen = 'START';
-                break;
-        }
-    }
-});

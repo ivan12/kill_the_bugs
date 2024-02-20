@@ -1,7 +1,9 @@
+const colorsPriority = ['rgb(0,128,0)', 'rgb(192,192,192)', 'rgb(255,0,0)'];
+
 function drawEnemies() {
     enemies.forEach(enemy => {
         drawVisionRadius(enemy); // Adicione esta linha para desenhar o raio de visão
-        ctx.fillStyle = '#FF0000';
+        ctx.fillStyle = colorsPriority[enemy.priority - 1];
         ctx.fillRect(
             enemy.x - enemy.width / 2,
             enemy.y - enemy.height / 2,
@@ -9,12 +11,11 @@ function drawEnemies() {
             enemy.height
         );
         ctx.fillStyle = '#0F00F0';
-        ctx.font = '20px';
         ctx.fillText(
-            `CX ${boss ? '' : enemy.points}`,
+            `CX ${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
             enemy.x - enemy.width / 2,
             enemy.y + enemy.height / 3,
-            40
+            30
         );
     });
 }
@@ -140,6 +141,7 @@ function spawnEnemy() {
         height: 20,
         speed: 1,
         points: getRandomFibonacciNumber(),
+        priority: getPriority(),
         directionX: Math.cos(angle),
         directionY: Math.sin(angle),
     };

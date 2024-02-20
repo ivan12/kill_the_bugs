@@ -23,3 +23,8 @@ function simulateTeamPoints(numMembers) {
 
     return totalPoints;
 }
+
+// RETORNANDO 1 BAIXA 2 MEDIA 3 ALTA
+function getPriority() {
+    return Math.floor(Math.random() * 3) + 1;
+}

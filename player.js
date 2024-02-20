@@ -40,11 +40,46 @@ function recoverLife() {
         // Schedule the next recovery only if no timeout is currently active
         if (!recoveryTimeout) {
             recoveryTimeout = setTimeout(() => {
-                recoveryTimeout = null;  // Reset the timeout reference
+                recoveryTimeout = null; // Reset the timeout reference
                 recoverLife();
             }, 20000);
         }
     }
+}
+
+function verifyIfHaveAnotherEnemyMorePriority(enemy) {
+    return enemies.some(enemyParam => enemyParam !== enemy && enemyParam.priority > enemy.priority);
+}
+
+function killEnemiesInsideSafeZone() {
+    enemies = enemies.filter(enemy => {
+        const distanceToEnemy = Math.sqrt(
+            (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
+        );
+
+        /* if inside remove points and remove enemy */
+        const isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
+        if (!isEnemyOutside) {
+            /* if enemy more strong than safeZone */
+            if (enemy.points > safeZone.teamPoints) {
+                enemy.points -= safeZone.teamPoints;
+                safeZone.teamPoints -= enemy.points;
+                return true;
+            }
+
+            // Check if there are enemies with higher priority before killing
+            if (!verifyIfHaveAnotherEnemyMorePriority(enemy, enemies)) {
+                safeZone.teamPoints -= enemy.points;
+                return false; // Remove the enemy only if no higher priority enemies are present
+            } else {
+                priorityDenied = true;
+            }
+        }
+
+        return true;
+    });
+
+    return enemies;
 }
 
 function updatePlayer() {
@@ -64,29 +99,7 @@ function updatePlayer() {
     );
     if (distanceToSafeZone < safeZone.radius) {
         recoverLife();
-
-        // Kill enemies inside the Safe Zone
-        let isEnemyOutside = true;
-        enemies = enemies.filter(enemy => {
-            const distanceToEnemy = Math.sqrt(
-                (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
-            );
-
-            /* if enemy more strong than safeZone */
-            if (enemy.points > safeZone.teamPoints) {
-                enemy.points -= safeZone.teamPoints;
-                safeZone.teamPoints -= enemy.points;
-                return;
-            }
-
-            /* if inside remove points and remove enemy */
-            isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
-            if (!isEnemyOutside) {
-                safeZone.teamPoints -= enemy.points;
-            }
-
-            return isEnemyOutside;
-        });
+        killEnemiesInsideSafeZone();
     }
 
     // Verify if enemies collided with the player

@@ -76,3 +76,6 @@ const matrixText = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 const columns = canvas.width / 10;
 const drops = 40;
 const matrixChars = [];
+
+/* INFOS */
+let priorityDenied = false;

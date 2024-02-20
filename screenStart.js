@@ -43,14 +43,3 @@ function drawStartScreen() {
     ctx.drawImage(logoGameImage, 300, 50, logoGameImage.width, logoGameImage.height);
     setInterval(drawTextInfo(), 80);
 }
-
-document.addEventListener('keydown', e => {
-    if (current_screen === 'START') {
-        switch (e.key) {
-            case 'Enter':
-                ctx.globalAlpha = 1;
-                current_screen = 'RUN_GAME';
-                break;
-        }
-    }
-});

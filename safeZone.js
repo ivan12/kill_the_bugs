@@ -3,7 +3,7 @@ function drawSafeZone() {
         (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
     );
     const inSafezone = distanceToSafeZone < safeZone.radius;
-    const color = inSafezone ? '#0F0' : '#000';
+    const color = inSafezone ? (priorityDenied ? '#FF0000' : '#0F0') : '#000';
     ctx.strokeStyle = color;
     ctx.lineWidth = inSafezone ? wavesUntilZoneChange : 2;
     ctx.beginPath();
@@ -19,5 +19,11 @@ function updateSafeZone() {
         safeZone.x = Math.random() * canvas.width;
         safeZone.y = Math.random() * canvas.height;
         safeZone.teamPoints = simulateTeamPoints(5);
+    }
+
+    if (priorityDenied) {
+        setTimeout(() => {
+            priorityDenied = false;
+        }, 2000);
     }
 }
