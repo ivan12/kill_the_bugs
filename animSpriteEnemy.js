@@ -30,14 +30,21 @@ SpriteEnemyAnimation.prototype.draw = function (x, y, direction, speedAnim) {
         sourceY = 2 * this.height; // row 3
     }
 
+    const enemyCenterX = x + this.width / 2;
+    const enemyCenterY = y + this.height / 2;
+    const collisionRectWidth = this.width;
+    const collisionRectHeight = this.height;
+    const collisionRectX = enemyCenterX - collisionRectWidth / 2;
+    const collisionRectY = enemyCenterY - collisionRectHeight / 2;
+
     this.ctx.drawImage(
         this.image,
         sourceX,
         sourceY,
         this.width,
         this.height,
-        x - this.width / 2,
-        y - this.height / 2,
+        collisionRectX,
+        collisionRectY,
         this.width,
         this.height
     );

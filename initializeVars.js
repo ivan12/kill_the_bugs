@@ -35,6 +35,7 @@ const SCREENS = {
 let current_screen = 'START';
 
 /* Player */
+let damageInterval = null;
 const spritePlayerImage = new Image();
 spritePlayerImage.src = './imgs/sprites/player.png';
 const spritePlayer = new SpritePlayerAnimation(ctx, spritePlayerImage, 64, 64, 4, 4);
@@ -42,11 +43,11 @@ const spritePlayer = new SpritePlayerAnimation(ctx, spritePlayerImage, 64, 64, 4
 const player = {
     direction: 'right',
     health: 100,
-    height: 30,
+    height: 64,
     isMoving: false,
     points: getRandomFibonacciNumber(),
     speed: 7,
-    width: 30,
+    width: 64,
     x: canvas.width / 2,
     y: canvas.height / 2,
 };
@@ -58,6 +59,8 @@ const safeZone = {
     radius: 50,
     teamPoints: simulateTeamPoints(5),
 };
+
+let debug = false;
 
 /* Enemies */
 const spriteEnemyImage = new Image();

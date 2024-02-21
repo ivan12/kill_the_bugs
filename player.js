@@ -2,15 +2,26 @@ function drawPlayer() {
     // draw player
     spritePlayer.draw(player.x, player.y, player.direction, player.speed);
 
+    if (debug) {
+        const playerCenterX = player.x + player.width / 2;
+        const playerCenterY = player.y + player.height / 2;
+        const collisionRectWidth = player.width;
+        const collisionRectHeight = player.height;
+        const collisionRectX = playerCenterX - collisionRectWidth / 2;
+        const collisionRectY = playerCenterY - collisionRectHeight / 2;
+
+        ctx.strokeStyle = '#0000FF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.rect(collisionRectX, collisionRectY, collisionRectWidth, collisionRectHeight);
+        ctx.stroke();
+        ctx.closePath();
+    }
+
     // Desenha o texto de pontuação
     ctx.fillStyle = '#000';
     ctx.font = '40px';
-    ctx.fillText(
-        `${boss ? '' : player.points}`,
-        player.x - player.width / 2 + 8,
-        player.y + player.height - 50,
-        40
-    );
+    ctx.fillText(`${boss ? '' : player.points}`, player.x + 23, player.y, 40);
 }
 
 let recoveryTimeout;
@@ -68,50 +79,59 @@ function updatePlayer() {
         return;
     }
 
-    if (player.x < 0) player.x = 0;
-    if (player.x > canvas.width) player.x = canvas.width;
-    if (player.y < 0) player.y = 0;
-    if (player.y > canvas.height) player.y = canvas.height;
+    // Ensure player stays within canvas boundaries
+    player.x = Math.max(0, Math.min(player.x, canvas.width));
+    player.y = Math.max(0, Math.min(player.y, canvas.height));
 
-    // Verify if player is in safeZone
+    // Check if player is in the safe zone
     const distanceToSafeZone = Math.sqrt(
         (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
     );
+
     if (distanceToSafeZone < safeZone.radius && !recoveryTimeout) {
         recoverLife();
         killEnemiesInsideSafeZone();
     }
 
-    // Verify if enemies collided with the player
+    // Check for collision with enemies
     enemies.forEach(enemy => {
-        const dx = player.x - enemy.x;
-        const dy = player.y - enemy.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (enemyHasCollisionWithPlayer(enemy) && canTakeDamage) {
+            clearInterval(damageInterval);
 
-        // min distance to consider colision
-        const minCollisionDistance = 2;
-
-        if (distance - minCollisionDistance < player.width / 2 + enemy.width / 2 && canTakeDamage) {
-            // Damage the player
+            // Damage the player immediately
             player.health -= 10;
+
+            // Apply blur effect
+            canvas.style.filter = 'blur(3px) brightness(1.3)';
+
+            setTimeout(() => {
+                canvas.style.filter = 'blur(0)';
+            }, 200);
+
+            // Set a flag to prevent immediate further damage
             canTakeDamage = false;
 
-            // Blur effect
-            canvas.style.filter = 'blur(5px) brightness(2)';
-
-            if (enemy.points <= player.points) {
-                player.points = player.points - enemy.points;
-                enemies = enemies.filter(enemyParam => enemyParam !== enemy);
-            }
-
+            // Allow player to take damage after 1 second
             setTimeout(() => {
-                // Remove blur after 0.5 seconds
-                canvas.style.filter = 'blur(0)';
-            }, 50);
+                canTakeDamage = true;
+            }, 1000);
 
-            // Allow player to take damage after 2 seconds
-            setTimeout(() => {
-                if (!canTakeDamage) canTakeDamage = true;
+            // Schedule damage every second
+            damageInterval = setInterval(() => {
+                if (enemyHasCollisionWithPlayer(enemy)) {
+                    player.health -= 10;
+
+                    // Apply blur effect
+                    canvas.style.filter = 'blur(5px) brightness(2)';
+                    setTimeout(() => {
+                        canvas.style.filter = 'blur(0)';
+                    }, 200);
+
+                    // Allow player to take damage after 1 second
+                    setTimeout(() => {
+                        canTakeDamage = true;
+                    }, 1000);
+                }
             }, 1000);
         }
     });

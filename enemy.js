@@ -1,21 +1,29 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
-        drawVisionRadius(enemy); // Adicione esta linha para desenhar o raio de visão
         spriteEnemy.draw(enemy.x, enemy.y, enemy.direction, enemy.speed);
-        /*
-        ctx.fillStyle = colorsPriority[enemy.priority - 1];
-        ctx.fillRect(
-            enemy.x - enemy.width / 2,
-            enemy.y - enemy.height / 2,
-            enemy.width,
-            enemy.height
-        );
-        */
+
+        if (debug) {
+            drawVisionRadius(enemy);
+            const enemyCenterX = enemy.x + enemy.width / 2;
+            const enemyCenterY = enemy.y + enemy.height / 2;
+            const collisionRectWidth = enemy.width;
+            const collisionRectHeight = enemy.height;
+            const collisionRectX = enemyCenterX - collisionRectWidth / 2;
+            const collisionRectY = enemyCenterY - collisionRectHeight / 2;
+
+            ctx.strokeStyle = '#0000FF';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.rect(collisionRectX, collisionRectY, collisionRectWidth, collisionRectHeight);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
         ctx.fillStyle = '#0F00F0';
         ctx.fillText(
             `${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
-            enemy.x - enemy.width / 2,
-            enemy.y + enemy.height - 40,
+            enemy.x + 13,
+            enemy.y,
             30
         );
     });
@@ -30,10 +38,7 @@ function moveEnemy(enemy) {
     } else {
         // Persegue o jogador apenas se estiver dentro do raio de visão
         if (canSeePlayer(enemy)) {
-            const dx = player.x - enemy.x;
-            const dy = player.y - enemy.y;
-            const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
-            attackPlayer(enemy, dx, dy, distanceToPlayer, speed);
+            attackPlayer(enemy, speed);
         } else {
             wanderEnemy(enemy, speed);
         }
@@ -95,22 +100,23 @@ function setRandomDirection(enemy) {
     }
 }
 
-function attackPlayer(enemy, dx, dy, distance, speed) {
-    const minDistance = 1; // Distância mínima entre o jogador e o inimigo
-    const playerRadius = Math.max(player.width / 2, player.height / 2);
-    const enemyRadius = Math.max(enemy.width / 2, enemy.height / 2);
+function attackPlayer(enemy, speed) {
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
 
-    if (distance > 0) {
-        const moveX = (dx / distance) * speed;
-        const moveY = (dy / distance) * speed;
+    const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
 
-        // Verifica se a próxima posição não colide com o jogador
+    if (canSeePlayer(enemy) && distanceToPlayer > 0.4) {
+        const moveX = (dx / distanceToPlayer) * speed;
+        const moveY = (dy / distanceToPlayer) * speed;
+
         const nextX = enemy.x + moveX;
         const nextY = enemy.y + moveY;
 
-        const distanceToPlayerCenter = Math.sqrt((nextX - player.x) ** 2 + (nextY - player.y) ** 2);
-
-        if (distanceToPlayerCenter > playerRadius + enemyRadius + minDistance) {
+        if (
+            !enemyHasCollisionWithEnemies(nextX, nextY, enemy) &&
+            !enemyHasCollisionWithPlayer(enemy)
+        ) {
             enemy.x = nextX;
             enemy.y = nextY;
         }

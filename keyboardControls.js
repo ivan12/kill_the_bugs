@@ -6,7 +6,7 @@ document.addEventListener('keydown', e => {
     if (current_screen === 'RUN_GAME') {
         let newX = player.x;
         let newY = player.y;
-        
+
         switch (e.key) {
             case 'w':
             case 'ArrowUp':
@@ -38,24 +38,17 @@ document.addEventListener('keydown', e => {
             case 'l':
                 lightShadowOn = !lightShadowOn;
                 break;
+            case 'i':
+                debug = !debug;
+                break;
         }
 
-        // Verifica se o novo posicionamento do jogador colide com algum inimigo
-        let collisionDetected = false;
-        enemies.forEach(enemy => {
-            const dx = newX - enemy.x;
-            const dy = newY - enemy.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < player.width / 2 + enemy.width / 2) {
-                collisionDetected = true;
-            }
-        });
-
         // Se não houver colisão, atualiza a posição do jogador
-        if (!collisionDetected) {
+        if (isCollisionFree(newX, newY, player.spriteWidth, player.spriteHeight)) {
+            // Se não houver colisão, atualiza a posição do jogador
             player.x = newX;
             player.y = newY;
+        } else {
         }
     }
 
@@ -105,7 +98,7 @@ document.addEventListener('keyup', e => {
             case 'd':
             case 'ArrowRight':
                 player.isMoving = false;
-            break;
+                break;
         }
     }
 });
