@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 const center = { x: canvas.width / 2, y: canvas.height / 2 };
 
 /* frame hate */
+let deltaTime = 0;
 let lastTimestamp = 0;
 const targetFrameRate = 60; // Adjust this value to your desired frame rate
 const frameDuration = 1000 / targetFrameRate;
@@ -33,14 +34,21 @@ const SCREENS = {
 
 let current_screen = 'START';
 
+/* Player */
+const spritePlayerImage = new Image();
+spritePlayerImage.src = './imgs/sprites/player.png';
+const spritePlayer = new SpritePlayerAnimation(ctx, spritePlayerImage, 64, 64, 4, 4);
+
 const player = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
+    direction: 'right',
     health: 100,
     height: 30,
-    speed: 25,
-    width: 30,
+    isMoving: false,
     points: getRandomFibonacciNumber(),
+    speed: 7,
+    width: 30,
+    x: canvas.width / 2,
+    y: canvas.height / 2,
 };
 
 const safeZone = {
@@ -52,6 +60,10 @@ const safeZone = {
 };
 
 /* Enemies */
+const spriteEnemyImage = new Image();
+spriteEnemyImage.src = './imgs/sprites/bug.png';
+const spriteEnemy = new SpriteEnemyAnimation(ctx, spriteEnemyImage, 38, 38, 4, 4);
+
 const colorsPriority = ['rgb(0,128,0)', 'rgb(192,192,192)', 'rgb(255,0,0)'];
 let enemies = [];
 let blurIntensity = 0;

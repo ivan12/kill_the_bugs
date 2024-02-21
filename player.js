@@ -1,24 +1,6 @@
 function drawPlayer() {
-    const borderWidth = 3; // Ajuste conforme necessário
-
     // draw player
-    ctx.fillStyle = '#7B68EE';
-    ctx.fillRect(
-        player.x - player.width / 2,
-        player.y - player.height / 2,
-        player.width,
-        player.height
-    );
-
-    // Desenha o contorno da barra de vida
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(
-        player.x - player.width / 2,
-        player.y - player.height / 2,
-        player.width,
-        player.height
-    );
+    spritePlayer.draw(player.x, player.y, player.direction, player.speed);
 
     // Desenha o texto de pontuação
     ctx.fillStyle = '#000';
@@ -26,7 +8,7 @@ function drawPlayer() {
     ctx.fillText(
         `${boss ? '' : player.points}`,
         player.x - player.width / 2 + 8,
-        player.y + player.height / 3,
+        player.y + player.height - 50,
         40
     );
 }
@@ -125,11 +107,11 @@ function updatePlayer() {
             setTimeout(() => {
                 // Remove blur after 0.5 seconds
                 canvas.style.filter = 'blur(0)';
-            }, 500);
+            }, 50);
 
             // Allow player to take damage after 2 seconds
             setTimeout(() => {
-                canTakeDamage = true;
+                if (!canTakeDamage) canTakeDamage = true;
             }, 1000);
         }
     });

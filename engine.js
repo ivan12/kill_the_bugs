@@ -68,7 +68,7 @@ function drawBackground() {
 
 /* game update loop - core */
 function gameLoop(timestamp) {
-    const deltaTime = timestamp - lastTimestamp;
+    deltaTime = timestamp - lastTimestamp;
 
     if (deltaTime >= frameDuration) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

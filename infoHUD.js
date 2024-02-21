@@ -34,13 +34,14 @@ function drawInfoHUD() {
         ctx.font = 'bold 20px Arial';
 
         ctx.fillText(`Sprint: ${wave}`, canvas.width - 100, 30);
-        ctx.fillText(`Bugs de CX: ${enemies.length}`, 20, 30);
+        ctx.fillText(`Bugs CX: ${enemies.length}`, 20, 30);
+        ctx.fillText(`FPS: ${parseInt(deltaTime)}`, 20, 60);
 
         ctx.fillText(`Dica: Fique com sua equipe`, 360, 780);
 
         if (nextWaveTimer > 0) {
             ctx.font = 'bold 16px Arial';
-            ctx.fillText(`Next Sprint: ${nextWaveTimer.toFixed(1)}s`, canvas.width - 150, 55);
+            ctx.fillText(`Next Sprint: ${parseInt(nextWaveTimer)}s`, canvas.width - 150, 55);
         }
     } else {
         ctx.fillText(`MATE O HotFix!`, 10, 130);

@@ -1,6 +1,8 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
         drawVisionRadius(enemy); // Adicione esta linha para desenhar o raio de visão
+        spriteEnemy.draw(enemy.x, enemy.y, enemy.direction, enemy.speed);
+        /*
         ctx.fillStyle = colorsPriority[enemy.priority - 1];
         ctx.fillRect(
             enemy.x - enemy.width / 2,
@@ -8,11 +10,12 @@ function drawEnemies() {
             enemy.width,
             enemy.height
         );
+        */
         ctx.fillStyle = '#0F00F0';
         ctx.fillText(
-            `CX ${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
+            `${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
             enemy.x - enemy.width / 2,
-            enemy.y + enemy.height / 3,
+            enemy.y + enemy.height - 40,
             30
         );
     });
@@ -46,14 +49,18 @@ function moveEnemyAwayFromEdge(enemy, margin = 50) {
 
     if (enemy.x < margin) {
         enemy.x += margin - enemy.x;
+        enemy.direction = 'right';
     } else if (enemy.x > canvasWidth - margin) {
         enemy.x -= enemy.x - (canvasWidth - margin);
+        enemy.direction = 'left';
     }
 
     if (enemy.y < margin) {
         enemy.y += margin - enemy.y;
+        enemy.direction = 'down';
     } else if (enemy.y > canvasHeight - margin) {
         enemy.y -= enemy.y - (canvasHeight - margin);
+        enemy.direction = 'up';
     }
 }
 
@@ -62,9 +69,7 @@ function wanderEnemy(enemy, speed) {
 
     // Altera a direção aleatoriamente com base na probabilidade
     if (Math.random() < changeDirectionProbability) {
-        const angle = Math.random() * 2 * Math.PI;
-        enemy.directionX = Math.cos(angle);
-        enemy.directionY = Math.sin(angle);
+        setRandomDirection(enemy);
     }
 
     // Move o inimigo na direção atual
@@ -74,6 +79,20 @@ function wanderEnemy(enemy, speed) {
     // Mantém o inimigo dentro dos limites da tela
     enemy.x = Math.max(0, Math.min(enemy.x, canvas.width - enemy.width));
     enemy.y = Math.max(0, Math.min(enemy.y, canvas.height - enemy.height));
+}
+
+function setRandomDirection(enemy) {
+    const angle = Math.random() * 2 * Math.PI;
+
+    enemy.directionX = Math.cos(angle);
+    enemy.directionY = Math.sin(angle);
+
+    // Determina a direção com base nas componentes de direção
+    if (Math.abs(enemy.directionX) > Math.abs(enemy.directionY)) {
+        enemy.direction = enemy.directionX > 0 ? 'right' : 'left';
+    } else {
+        enemy.direction = enemy.directionY > 0 ? 'down' : 'up';
+    }
 }
 
 function attackPlayer(enemy, dx, dy, distance, speed) {
@@ -138,6 +157,7 @@ function spawnEnemy() {
         y: Math.random() * canvas.height,
         width: 20,
         height: 20,
+        direction: 'right',
         speed: priority * 2,
         points: getRandomFibonacciNumber(),
         priority: priority,
