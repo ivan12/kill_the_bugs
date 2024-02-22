@@ -46,8 +46,6 @@ function drawMinimap() {
 
         // Desenha o inimigo no minimapa
         ctx.beginPath();
-        console.log(enemy.priority);
-        console.log('colorsPriority[enemy.priority] >> ', colorsPriority[enemy.priority]);
         ctx.strokeStyle = colorEnemy;
         ctx.fillStyle = colorEnemy;
         ctx.arc(enemyMinimapX, enemyMinimapY, enemyMinimapSize, 0, Math.PI * 2);

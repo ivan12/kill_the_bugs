@@ -11,10 +11,21 @@ function drawPlayer() {
         ctx.closePath();
     }
 
-    // Desenha o texto de pontuação
-    ctx.fillStyle = '#000';
-    ctx.font = '40px';
-    ctx.fillText(`${boss ? '' : player.points}`, player.x - 8, player.y - player.radius - 5, 40);
+    // Desenha o texto de pontos do jogador
+    const pointsPlayerText = `${boss ? '' : player.points}`;
+    const textWidth = ctx.measureText(pointsPlayerText).width;
+
+    ctx.fillStyle = '#1C1B1B';
+    ctx.beginPath();
+    ctx.arc(player.x, player.y - player.radius - 20, textWidth / 2 + 10, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
+
+    ctx.fillStyle = '#EECC10';
+    ctx.font = '18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pointsPlayerText, player.x, player.y - player.radius - 20);
 }
 
 let recoveryTimeout;
@@ -58,7 +69,6 @@ function killEnemiesInsideSafeZone() {
                 safeZone.teamPoints -= enemy.points;
                 return false; // Remove the enemy only if no higher priority enemies are present
             } else {
-                console.log('priorityDenied!!! enemy >> ', enemy);
                 priorityDenied = true;
             }
         }
@@ -106,7 +116,6 @@ function updatePlayer() {
 
             if (enemy.points <= player.points) {
                 player.points -= enemy.points;
-                console.log('KILL ENEMY');
                 return false;
             }
 

@@ -13,13 +13,22 @@ function drawEnemies() {
             ctx.closePath();
         }
 
-        ctx.fillStyle = '#0F00F0';
-        ctx.fillText(
-            `${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
-            enemy.x - 10,
-            enemy.y - enemy.radius - 5,
-            40
-        );
+        if (canSeePlayer(enemy)) {
+            const pointsEnemyText = `${boss ? '' : enemy.points}`;
+            const textWidth = ctx.measureText(pointsEnemyText).width;
+
+            ctx.fillStyle = '#1C1B1B';
+            ctx.beginPath();
+            ctx.arc(enemy.x, enemy.y - enemy.radius - 20, textWidth / 2 + 10, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.fillStyle = '#EFEDED';
+            ctx.font = '18px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(pointsEnemyText, enemy.x, enemy.y - enemy.radius - 20);
+        }
     });
 }
 

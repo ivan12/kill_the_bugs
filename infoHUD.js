@@ -47,9 +47,9 @@ function drawInfoHUD() {
 
         ctx.fillText(`Dica: Fique com sua equipe`, 360, 780);
 
-        if (nextWaveTimer > 0) {
+        if (nextWaveTimer >= 1) {
             ctx.font = 'bold 16px Arial';
-            ctx.fillText(`Next Sprint: ${parseInt(nextWaveTimer)}s`, canvas.width - 150, 55);
+            ctx.fillText(`Next Sprint: ${parseInt(nextWaveTimer)}s`, canvas.width - 133, 55);
         }
     } else {
         ctx.fillText(`MATE O HotFix!`, 10, 130);

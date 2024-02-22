@@ -48,8 +48,7 @@ document.addEventListener('keydown', e => {
             // Se não houver colisão, atualiza a posição do jogador
             player.x = newX;
             player.y = newY;
-        } else {
-        }
+        } 
     }
 
     if (current_screen === 'RUN_GAME' || current_screen === 'PAUSE') {
