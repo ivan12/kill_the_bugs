@@ -41,6 +41,10 @@ function drawVisionRadius(enemy) {
 }
 
 function updateEnemies() {
+    /* Remove enemies dead */
+    enemies = enemies.filter(enemy => enemy.isAlive === true);
+
+    /* Update enemies */
     enemies.forEach(enemy => {
         moveEnemyAI(enemy);
         // avoid the canvas borders
@@ -57,6 +61,7 @@ function spawnEnemy() {
         directionX: Math.cos(angle),
         directionY: Math.sin(angle),
         height: 20,
+        isAlive: true,
         points: getRandomFibonacciNumber(),
         priority: priority,
         radius: 19,
