@@ -3,17 +3,10 @@ function drawPlayer() {
     spritePlayer.draw(player.x, player.y, player.direction, player.speed);
 
     if (debug) {
-        const playerCenterX = player.x + player.width / 2;
-        const playerCenterY = player.y + player.height / 2;
-        const collisionRectWidth = player.width;
-        const collisionRectHeight = player.height;
-        const collisionRectX = playerCenterX - collisionRectWidth / 2;
-        const collisionRectY = playerCenterY - collisionRectHeight / 2;
-
         ctx.strokeStyle = '#0000FF';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.rect(collisionRectX, collisionRectY, collisionRectWidth, collisionRectHeight);
+        ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.closePath();
     }
@@ -21,7 +14,7 @@ function drawPlayer() {
     // Desenha o texto de pontuação
     ctx.fillStyle = '#000';
     ctx.font = '40px';
-    ctx.fillText(`${boss ? '' : player.points}`, player.x + 23, player.y, 40);
+    ctx.fillText(`${boss ? '' : player.points}`, player.x - 8, player.y - player.radius - 5, 40);
 }
 
 let recoveryTimeout;
@@ -44,13 +37,8 @@ function verifyIfHaveAnotherEnemyMorePriority(enemy) {
 
 function killEnemiesInsideSafeZone() {
     enemies = enemies.filter(enemy => {
-        const distanceToEnemy = Math.sqrt(
-            (enemy.x - safeZone.x) ** 2 + (enemy.y - safeZone.y) ** 2
-        );
-
         /* if inside remove points and remove enemy */
-        const isEnemyOutside = distanceToEnemy > safeZone.radius + enemy.width / 2;
-        if (!isEnemyOutside) {
+        if (!isEnemyOutsideSafeZone(enemy)) {
             /* if enemy more strong than safeZone */
             if (enemy.points > safeZone.teamPoints) {
                 enemy.points -= safeZone.teamPoints;
@@ -74,6 +62,8 @@ function killEnemiesInsideSafeZone() {
 }
 
 function updatePlayer() {
+    isPlayerInSafezone = false;
+
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
         return;
@@ -83,23 +73,26 @@ function updatePlayer() {
     player.x = Math.max(0, Math.min(player.x, canvas.width));
     player.y = Math.max(0, Math.min(player.y, canvas.height));
 
-    // Check if player is in the safe zone
-    const distanceToSafeZone = Math.sqrt(
-        (player.x - safeZone.x) ** 2 + (player.y - safeZone.y) ** 2
-    );
-
-    if (distanceToSafeZone < safeZone.radius && !recoveryTimeout) {
-        recoverLife();
+    if (isPlayerInsideSafeZone()) {
+        if (!recoveryTimeout) recoverLife();
         killEnemiesInsideSafeZone();
+        isPlayerInSafezone = true;
     }
 
     // Check for collision with enemies
-    enemies.forEach(enemy => {
-        if (enemyHasCollisionWithPlayer(enemy) && canTakeDamage) {
+    enemies = enemies.filter(enemy => {
+        if (damageInterval) {
             clearInterval(damageInterval);
-
+        }
+        if (enemyHasCollisionWithPlayer(enemy)) {
             // Damage the player immediately
-            player.health -= 10;
+            if (canTakeDamage) player.health -= 10;
+
+            if (enemy.points <= player.points) {
+                player.points -= enemy.points;
+                console.log('KILL ENEMY');
+                return false;
+            }
 
             // Apply blur effect
             canvas.style.filter = 'blur(3px) brightness(1.3)';
@@ -134,5 +127,6 @@ function updatePlayer() {
                 }
             }, 1000);
         }
+        return true;
     });
 }

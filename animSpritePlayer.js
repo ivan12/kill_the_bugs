@@ -30,10 +30,11 @@ SpritePlayerAnimation.prototype.draw = function (x, y, direction, speedAnim) {
         sourceY = 2 * this.height; // row 3
     }
 
-    const playerCenterX = player.x + player.width / 2;
-    const playerCenterY = player.y + player.height / 2;
-    const collisionRectWidth = player.width;
-    const collisionRectHeight = player.height;
+    const ajustYDraw = -5;
+    const playerCenterX = x;
+    const playerCenterY = y + ajustYDraw;
+    const collisionRectWidth = this.width;
+    const collisionRectHeight = this.height;
     const collisionRectX = playerCenterX - collisionRectWidth / 2;
     const collisionRectY = playerCenterY - collisionRectHeight / 2;
 

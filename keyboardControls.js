@@ -67,6 +67,7 @@ document.addEventListener('keydown', e => {
         switch (e.key) {
             case 'Enter':
                 ctx.globalAlpha = 1;
+                initializeWaves();
                 current_screen = 'RUN_GAME';
                 break;
         }

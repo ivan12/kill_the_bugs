@@ -24,7 +24,8 @@ function simulateTeamPoints(numMembers) {
     return totalPoints;
 }
 
-// RETORNANDO 1-BAIXA 2-MEDIA 3-ALTA
+// RETORNANDO 0-BAIXA 1-MEDIA 2-ALTA
 function getPriority() {
-    return Math.floor(Math.random() * 3) + 1;
+    const priority = Math.floor(Math.random() * 3);
+    return priority;
 }

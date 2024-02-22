@@ -1,31 +1,20 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
-        spriteEnemy.draw(enemy.x, enemy.y, enemy.direction, enemy.speed);
+        /* draw with priority >> choose sprite color */
+        listSpritesEnemies[enemy.priority].draw(enemy.x, enemy.y, enemy.direction, enemy.speed);
 
         if (debug) {
             drawVisionRadius(enemy);
-            const enemyCenterX = enemy.x + enemy.width / 2;
-            const enemyCenterY = enemy.y + enemy.height / 2;
-            const collisionRectWidth = enemy.width;
-            const collisionRectHeight = enemy.height;
-            const collisionRectX = enemyCenterX - collisionRectWidth / 2;
-            const collisionRectY = enemyCenterY - collisionRectHeight / 2;
-
             ctx.strokeStyle = '#0000FF';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.rect(collisionRectX, collisionRectY, collisionRectWidth, collisionRectHeight);
+            ctx.arc(enemy.x, enemy.y, enemy.radius, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.closePath();
         }
 
         ctx.fillStyle = '#0F00F0';
-        ctx.fillText(
-            `${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
-            enemy.x + 13,
-            enemy.y,
-            30
-        );
+        ctx.fillText(`${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`, enemy.x - 10, enemy.y - enemy.radius - 5, 40);
     });
 }
 
@@ -163,6 +152,7 @@ function spawnEnemy() {
         y: Math.random() * canvas.height,
         width: 20,
         height: 20,
+        radius: 19,
         direction: 'right',
         speed: priority * 2,
         points: getRandomFibonacciNumber(),

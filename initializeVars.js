@@ -35,6 +35,7 @@ const SCREENS = {
 let current_screen = 'START';
 
 /* Player */
+let isPlayerInSafezone = false;
 let damageInterval = null;
 const spritePlayerImage = new Image();
 spritePlayerImage.src = './imgs/sprites/player.png';
@@ -46,6 +47,7 @@ const player = {
     height: 64,
     isMoving: false,
     points: getRandomFibonacciNumber(),
+    radius: 22,
     speed: 7,
     width: 64,
     x: canvas.width / 2,
@@ -63,9 +65,19 @@ const safeZone = {
 let debug = false;
 
 /* Enemies */
-const spriteEnemyImage = new Image();
-spriteEnemyImage.src = './imgs/sprites/bug.png';
-const spriteEnemy = new SpriteEnemyAnimation(ctx, spriteEnemyImage, 38, 38, 4, 4);
+const spriteEnemyRedImage = new Image();
+spriteEnemyRedImage.src = './imgs/sprites/bugRed.png';
+const spriteEnemyRed = new SpriteEnemyAnimation(ctx, spriteEnemyRedImage, 38, 38, 4, 4);
+
+const spriteEnemyYellowImage = new Image();
+spriteEnemyYellowImage.src = './imgs/sprites/bugYellow.png';
+const spriteEnemyYellow = new SpriteEnemyAnimation(ctx, spriteEnemyYellowImage, 38, 38, 4, 4);
+
+const spriteEnemyGreenImage = new Image();
+spriteEnemyGreenImage.src = './imgs/sprites/bugGreen.png';
+const spriteEnemyGreen = new SpriteEnemyAnimation(ctx, spriteEnemyGreenImage, 38, 38, 4, 4);
+
+const listSpritesEnemies = [spriteEnemyGreen, spriteEnemyYellow, spriteEnemyRed];
 
 const colorsPriority = ['rgb(0,128,0)', 'rgb(192,192,192)', 'rgb(255,0,0)'];
 let enemies = [];
