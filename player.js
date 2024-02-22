@@ -35,7 +35,7 @@ function recoverLife() {
         if (!recoveryTimeout) {
             recoveryTimeout = setTimeout(() => {
                 recoveryTimeout = null;
-            }, 2000);
+            }, 1000);
         }
     }
 }
@@ -110,7 +110,7 @@ function updatePlayer() {
                 // Apply blur effect temporarily
                 canvas.style.filter = 'blur(3px) brightness(1.3)';
                 setTimeout(() => {
-                    canvas.style.filter = 'blur(0)';
+                    canvas.style.filter = 'none';
                 }, 200);
             }
 
@@ -136,7 +136,7 @@ function updatePlayer() {
                     // Apply blur effect temporarily
                     canvas.style.filter = 'blur(5px) brightness(2)';
                     setTimeout(() => {
-                        canvas.style.filter = 'blur(0)';
+                        canvas.style.filter = 'none'; // Remova o filtro de desfoque
                     }, 200);
 
                     // Allow player to take damage after 1 second

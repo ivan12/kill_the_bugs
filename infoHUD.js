@@ -1,6 +1,7 @@
 // Display info Head Up Display
 function drawInfoHUD() {
     /* life bar */
+    ctx.globalAlpha = 0.6;
     const playerHealthPercentage = player.health / 100;
     ctx.fillStyle = '#1C1C1C';
     ctx.fillRect(posXBar, posYBar, playerHealthBarWidth, playerHealthBarHeight);
@@ -13,10 +14,10 @@ function drawInfoHUD() {
     );
     ctx.strokeStyle = '#FFF';
     ctx.strokeRect(posXBar, posYBar, playerHealthBarWidth, playerHealthBarHeight);
-
+    ctx.globalAlpha = 1.0;
     // info feed to player
     ctx.fillStyle = '#1C1C1C';
-    ctx.font = 'bold 12px Arial';
+    ctx.font = 'bold 14px Arial';
     ctx.fillText(`Vida: ${player.health}`, posXBar + 5, posYBar + 18);
 
     if (!boss) {

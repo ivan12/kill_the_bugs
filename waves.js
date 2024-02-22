@@ -6,9 +6,12 @@ function initializeWaves() {
 }
 
 function updateWaves() {
+    if (enemies.length === 0) {
+        nextWaveCalculateTime = false;
+    }
     if (enemies.length === 0 && nextWaveCalculateTime === false) {
         nextWaveCalculateTime = true;
-        nextWaveTimer = WAVES_TIME; // reset time to next wave
+        nextWaveTimer = WAVES_TIME;
         bossMaxHealth = wave * 5;
         return;
     }

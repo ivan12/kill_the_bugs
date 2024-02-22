@@ -12,8 +12,9 @@ function drawMinimap() {
     ctx.lineWidth = 1;
 
     // Desenha o background do canvas no minimapa
+    ctx.globalAlpha = 0.7;
     ctx.drawImage(canvas, minimapX, minimapY, minimapWidth, minimapHeight);
-
+    ctx.globalAlpha = 1.0;
     // Mapeia a posição do jogador para o minimapa
     const playerMinimapX = minimapX + player.x * scale;
     const playerMinimapY = minimapY + player.y * scale;
