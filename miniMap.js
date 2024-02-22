@@ -2,7 +2,7 @@ function drawMinimap() {
     // Defina as dimensões do minimapa e sua posição no canvas principal
     const minimapWidth = canvas.width / 4;
     const minimapHeight = canvas.height / 4;
-    const minimapX = canvas.width - minimapWidth - 10;
+    const minimapX = canvas.width - minimapWidth - 19;
     const minimapY = 80;
 
     // Mapeia as posições dos inimigos para o minimapa com base na escala

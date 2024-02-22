@@ -9,9 +9,6 @@ for (let i = 0; i < columns; i++) {
 }
 
 function drawMatrix() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = '#00FF00';
     ctx.font = '16px Arial';
 

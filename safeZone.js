@@ -1,7 +1,7 @@
 function drawSafeZone() {
-    const color = isPlayerInSafezone ? (priorityDenied ? '#FF0000' : '#0F0') : '#FFF';
+    const color = isPlayerInSafeZone ? (priorityDenied ? '#FF0000' : '#0F0') : '#FFF';
     ctx.strokeStyle = color;
-    ctx.lineWidth = isPlayerInSafezone ? wavesUntilZoneChange : 2;
+    ctx.lineWidth = isPlayerInSafeZone ? wavesUntilZoneChange : 2;
     ctx.beginPath();
     ctx.arc(safeZone.x, safeZone.y, safeZone.radius, 0, Math.PI * 2);
     ctx.fillStyle = color;

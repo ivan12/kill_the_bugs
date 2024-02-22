@@ -28,8 +28,6 @@ function drawPlayer() {
     ctx.fillText(pointsPlayerText, player.x, player.y - player.radius - 20);
 }
 
-let recoveryTimeout;
-
 function recoverLife() {
     if (player.health < 100) {
         player.health = Math.min(100, player.health + 5);
@@ -67,6 +65,7 @@ function killEnemiesInsideSafeZone() {
             // Check if there are enemies with higher priority before killing
             if (!verifyIfHaveAnotherEnemyMorePriority(enemy)) {
                 safeZone.teamPoints -= enemy.points;
+                clearInterval(enemy.animationInterval);
                 return false; // Remove the enemy only if no higher priority enemies are present
             } else {
                 priorityDenied = true;
@@ -80,7 +79,7 @@ function killEnemiesInsideSafeZone() {
 }
 
 function updatePlayer() {
-    isPlayerInSafezone = false;
+    isPlayerInSafeZone = false;
 
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
@@ -94,12 +93,13 @@ function updatePlayer() {
     if (isPlayerInsideSafeZone()) {
         if (!recoveryTimeout) recoverLife();
         killEnemiesInsideSafeZone();
-        isPlayerInSafezone = true;
+        isPlayerInSafeZone = true;
     }
 
     // Check for collision with enemies
     enemies = enemies.filter(enemy => {
         clearInterval(damageInterval);
+        clearInterval(takeDamageTimeout);
 
         canvas.style.filter = 'blur(0)';
 
@@ -116,6 +116,7 @@ function updatePlayer() {
 
             if (enemy.points <= player.points) {
                 player.points -= enemy.points;
+                clearInterval(enemy.animationInterval);
                 return false;
             }
 

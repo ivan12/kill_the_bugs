@@ -33,22 +33,21 @@ function drawEnemies() {
 }
 
 function moveEnemy(enemy) {
-    const speed = 1;
-
-    // Movimentação aleatória quando o jogador está na safezone
+    // if player inside safeZone random moves
     if (isPlayerInsideSafeZone()) {
-        wanderEnemy(enemy, speed);
-    } else {
-        // Persegue o jogador apenas se estiver dentro do raio de visão
-        if (canSeePlayer(enemy)) {
-            attackPlayer(enemy, speed);
-        } else {
-            wanderEnemy(enemy, speed);
-        }
+        wanderEnemy(enemy);
     }
 
-    // Mantém os inimigos afastados das bordas
-    moveEnemyAwayFromEdge(enemy);
+    // see the player take same action
+    if (canSeePlayer(enemy)) {
+        if (player.points >= enemy.points) {
+            escapeRun(enemy);
+            return;
+        }
+        attackPlayer(enemy);
+        return;
+    }
+    wanderEnemy(enemy);
 }
 
 function moveEnemyAwayFromEdge(enemy, margin = 50) {
@@ -72,7 +71,7 @@ function moveEnemyAwayFromEdge(enemy, margin = 50) {
     }
 }
 
-function wanderEnemy(enemy, speed) {
+function wanderEnemy(enemy) {
     const changeDirectionProbability = 0.02;
 
     // Altera a direção aleatoriamente com base na probabilidade
@@ -82,8 +81,8 @@ function wanderEnemy(enemy, speed) {
     }
 
     // Move o inimigo na direção atual
-    enemy.x += enemy.directionX * speed;
-    enemy.y += enemy.directionY * speed;
+    enemy.x += enemy.directionX * enemy.speed;
+    enemy.y += enemy.directionY * enemy.speed;
 
     // Mantém o inimigo dentro dos limites da tela
     enemy.x = Math.max(0, Math.min(enemy.x, canvas.width - enemy.width));
@@ -104,7 +103,7 @@ function setRandomDirection(enemy) {
     }
 }
 
-function attackPlayer(enemy, speed) {
+function attackPlayer(enemy) {
     const dx = player.x - enemy.x;
     const dy = player.y - enemy.y;
 
@@ -112,11 +111,32 @@ function attackPlayer(enemy, speed) {
 
     if (canSeePlayer(enemy) && distanceToPlayer > 0.4) {
         enemy.action = 'Atacar Jogador!';
-        const moveX = (dx / distanceToPlayer) * speed;
-        const moveY = (dy / distanceToPlayer) * speed;
+        const moveX = (dx / distanceToPlayer) * enemy.speed;
+        const moveY = (dy / distanceToPlayer) * enemy.speed;
 
         const nextX = enemy.x + moveX;
         const nextY = enemy.y + moveY;
+
+        if (!enemyHasCollisionWithPlayer(enemy)) {
+            enemy.x = nextX;
+            enemy.y = nextY;
+        }
+    }
+}
+
+function escapeRun(enemy) {
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+
+    const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
+
+    if (canSeePlayer(enemy) && distanceToPlayer > 0.4) {
+        enemy.action = 'Escapar RUN!';
+        const moveX = (dx / distanceToPlayer) * enemy.speed;
+        const moveY = (dy / distanceToPlayer) * enemy.speed;
+
+        const nextX = enemy.x - moveX;
+        const nextY = enemy.y - moveY;
 
         if (!enemyHasCollisionWithPlayer(enemy)) {
             enemy.x = nextX;
@@ -147,6 +167,8 @@ function drawVisionRadius(enemy) {
 function updateEnemies() {
     enemies.forEach(enemy => {
         moveEnemy(enemy);
+        // avoid the canvas borders
+        moveEnemyAwayFromEdge(enemy);
     });
 }
 
@@ -154,18 +176,18 @@ function spawnEnemy() {
     const angle = Math.random() * 2 * Math.PI;
     const priority = getPriority();
     const enemy = {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        width: 20,
-        height: 20,
-        radius: 19,
-        direction: 'right',
         action: '',
-        speed: priority * 2,
-        points: getRandomFibonacciNumber(),
-        priority: priority,
+        direction: 'right',
         directionX: Math.cos(angle),
         directionY: Math.sin(angle),
+        height: 20,
+        points: getRandomFibonacciNumber(),
+        priority: priority,
+        radius: 19,
+        speed: priority === 0 ? 1 : priority,
+        width: 20,
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
     };
     enemies.push(enemy);
 }

@@ -2,7 +2,6 @@ function runningGame() {
     // Update game
     updatePlayer();
     updateEnemies();
-    updateMatrix();
     updateSafeZone();
     updateWaves();
 
@@ -11,7 +10,6 @@ function runningGame() {
     drawSafeZone();
     drawPlayer();
     drawEnemies();
-    drawMatrix();
 
     if (!boss) {
         /* show or not lightEffect */
