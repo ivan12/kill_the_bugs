@@ -1,5 +1,6 @@
 function initializeWaves() {
-    for (let i = 0; i < 3; i++) {
+    enemies = [];
+    for (let i = 0; i < 5; i++) {
         spawnEnemy();
     }
 }

@@ -34,9 +34,13 @@ const SCREENS = {
 
 let current_screen = 'START';
 
+/* Intervals timeout */
+let damageInterval = null;
+let blurInterval = null;
+let takeDamageTimeout = null;
+
 /* Player */
 let isPlayerInSafezone = false;
-let damageInterval = null;
 const spritePlayerImage = new Image();
 spritePlayerImage.src = './imgs/sprites/player.png';
 const spritePlayer = new SpritePlayerAnimation(ctx, spritePlayerImage, 64, 64, 4, 4);

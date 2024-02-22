@@ -66,9 +66,9 @@ document.addEventListener('keydown', e => {
     if (current_screen === 'START') {
         switch (e.key) {
             case 'Enter':
+                current_screen = 'RUN_GAME';
                 ctx.globalAlpha = 1;
                 initializeWaves();
-                current_screen = 'RUN_GAME';
                 break;
         }
     }
@@ -78,6 +78,7 @@ document.addEventListener('keydown', e => {
             case 'Enter':
                 clearGameVars();
                 current_screen = 'RUN_GAME';
+                initializeWaves();
                 break;
             case 'Escape':
                 clearGameVars();

@@ -26,15 +26,30 @@ function drawMinimap() {
     ctx.stroke();
     ctx.strokeRect(minimapX, minimapY, minimapWidth, minimapHeight);
 
+    // Desenha a safeZone no minimapa
+    const safeZoneMinimapX = minimapX + safeZone.x * scale;
+    const safeZoneMinimapY = minimapY + safeZone.y * scale;
+    const safeZoneMinimapRadius = safeZone.radius * scale;
+
+    ctx.strokeStyle = 'green'; // Cor da borda da safeZone
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(safeZoneMinimapX, safeZoneMinimapY, safeZoneMinimapRadius, 0, Math.PI * 2);
+    ctx.stroke();
+
     // Mapeia as posições dos inimigos para o minimapa
     for (const enemy of enemies) {
         const enemyMinimapX = minimapX + enemy.x * scale;
         const enemyMinimapY = minimapY + enemy.y * scale;
         const enemyMinimapSize = 10 * scale; // Tamanho fixo para representar os inimigos no minimapa
+        const colorEnemy = colorsPriority[enemy.priority];
 
         // Desenha o inimigo no minimapa
-        ctx.fillStyle = colorsPriority[enemy.priority - 1]; // Cor para os inimigos
         ctx.beginPath();
+        console.log(enemy.priority);
+        console.log('colorsPriority[enemy.priority] >> ', colorsPriority[enemy.priority]);
+        ctx.strokeStyle = colorEnemy;
+        ctx.fillStyle = colorEnemy;
         ctx.arc(enemyMinimapX, enemyMinimapY, enemyMinimapSize, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();

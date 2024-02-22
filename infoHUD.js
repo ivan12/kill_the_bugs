@@ -37,6 +37,14 @@ function drawInfoHUD() {
         ctx.fillText(`Bugs CX: ${enemies.length}`, 20, 30);
         ctx.fillText(`FPS: ${parseInt(deltaTime)}`, 20, 60);
 
+        if (debug) {
+            let distanceDisplayIAEnemy = 0;
+            enemies?.map(enemy => {
+                distanceDisplayIAEnemy += 30;
+                ctx.fillText(`Enemy IA: ${enemy.action}`, 20, 60 + distanceDisplayIAEnemy);
+            });
+        }
+
         ctx.fillText(`Dica: Fique com sua equipe`, 360, 780);
 
         if (nextWaveTimer > 0) {

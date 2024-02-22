@@ -14,7 +14,12 @@ function drawEnemies() {
         }
 
         ctx.fillStyle = '#0F00F0';
-        ctx.fillText(`${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`, enemy.x - 10, enemy.y - enemy.radius - 5, 40);
+        ctx.fillText(
+            `${boss ? '' : canSeePlayer(enemy) ? enemy.points : ''}`,
+            enemy.x - 10,
+            enemy.y - enemy.radius - 5,
+            40
+        );
     });
 }
 
@@ -64,6 +69,7 @@ function wanderEnemy(enemy, speed) {
     // Altera a direção aleatoriamente com base na probabilidade
     if (Math.random() < changeDirectionProbability) {
         setRandomDirection(enemy);
+        enemy.action = 'Vagar pelo Mapa...';
     }
 
     // Move o inimigo na direção atual
@@ -96,27 +102,18 @@ function attackPlayer(enemy, speed) {
     const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
 
     if (canSeePlayer(enemy) && distanceToPlayer > 0.4) {
+        enemy.action = 'Atacar Jogador!';
         const moveX = (dx / distanceToPlayer) * speed;
         const moveY = (dy / distanceToPlayer) * speed;
 
         const nextX = enemy.x + moveX;
         const nextY = enemy.y + moveY;
 
-        if (
-            !enemyHasCollisionWithEnemies(nextX, nextY, enemy) &&
-            !enemyHasCollisionWithPlayer(enemy)
-        ) {
+        if (!enemyHasCollisionWithPlayer(enemy)) {
             enemy.x = nextX;
             enemy.y = nextY;
         }
     }
-}
-
-function isPlayerInsideSafeZone() {
-    const dx = player.x - safeZone.x;
-    const dy = player.y - safeZone.y;
-    const distanceToSafeZone = Math.sqrt(dx * dx + dy * dy);
-    return distanceToSafeZone <= safeZone.radius;
 }
 
 function canSeePlayer(enemy) {
@@ -154,6 +151,7 @@ function spawnEnemy() {
         height: 20,
         radius: 19,
         direction: 'right',
+        action: '',
         speed: priority * 2,
         points: getRandomFibonacciNumber(),
         priority: priority,

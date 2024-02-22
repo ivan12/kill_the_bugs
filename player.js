@@ -35,6 +35,13 @@ function verifyIfHaveAnotherEnemyMorePriority(enemy) {
     return enemies.some(enemyParam => enemyParam !== enemy && enemyParam.priority > enemy.priority);
 }
 
+function isPlayerInsideSafeZone() {
+    const dx = player.x - safeZone.x;
+    const dy = player.y - safeZone.y;
+    const distanceToSafeZone = Math.sqrt(dx * dx + dy * dy);
+    return distanceToSafeZone <= safeZone.radius;
+}
+
 function killEnemiesInsideSafeZone() {
     enemies = enemies.filter(enemy => {
         /* if inside remove points and remove enemy */
@@ -47,10 +54,11 @@ function killEnemiesInsideSafeZone() {
             }
 
             // Check if there are enemies with higher priority before killing
-            if (!verifyIfHaveAnotherEnemyMorePriority(enemy, enemies)) {
+            if (!verifyIfHaveAnotherEnemyMorePriority(enemy)) {
                 safeZone.teamPoints -= enemy.points;
                 return false; // Remove the enemy only if no higher priority enemies are present
             } else {
+                console.log('priorityDenied!!! enemy >> ', enemy);
                 priorityDenied = true;
             }
         }
@@ -81,12 +89,20 @@ function updatePlayer() {
 
     // Check for collision with enemies
     enemies = enemies.filter(enemy => {
-        if (damageInterval) {
-            clearInterval(damageInterval);
-        }
+        clearInterval(damageInterval);
+
+        canvas.style.filter = 'blur(0)';
+
         if (enemyHasCollisionWithPlayer(enemy)) {
             // Damage the player immediately
-            if (canTakeDamage) player.health -= 10;
+            if (canTakeDamage) {
+                player.health -= 10;
+                // Apply blur effect temporarily
+                canvas.style.filter = 'blur(3px) brightness(1.3)';
+                setTimeout(() => {
+                    canvas.style.filter = 'blur(0)';
+                }, 200);
+            }
 
             if (enemy.points <= player.points) {
                 player.points -= enemy.points;
@@ -94,18 +110,11 @@ function updatePlayer() {
                 return false;
             }
 
-            // Apply blur effect
-            canvas.style.filter = 'blur(3px) brightness(1.3)';
-
-            setTimeout(() => {
-                canvas.style.filter = 'blur(0)';
-            }, 200);
-
             // Set a flag to prevent immediate further damage
             canTakeDamage = false;
 
             // Allow player to take damage after 1 second
-            setTimeout(() => {
+            takeDamageTimeout = setTimeout(() => {
                 canTakeDamage = true;
             }, 1000);
 
@@ -114,7 +123,7 @@ function updatePlayer() {
                 if (enemyHasCollisionWithPlayer(enemy)) {
                     player.health -= 10;
 
-                    // Apply blur effect
+                    // Apply blur effect temporarily
                     canvas.style.filter = 'blur(5px) brightness(2)';
                     setTimeout(() => {
                         canvas.style.filter = 'blur(0)';
