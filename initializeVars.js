@@ -51,7 +51,8 @@ let blurIntensity = 0;
 let canRecoverLife = true;
 let canTakeDamage = true;
 let isPlayerInSafeZone = false;
-let recoveryTimeout;
+let recoveryTimeout = 0;
+let canTakeDamageTimout = 0;
 
 const spritePlayerImage = new Image();
 spritePlayerImage.src = './imgs/sprites/player.png';
@@ -62,6 +63,7 @@ const player = {
     health: 100,
     height: 64,
     isMoving: false,
+    isRecovering: false,
     points: getRandomFibonacciNumber(),
     radius: 22,
     speed: 7,

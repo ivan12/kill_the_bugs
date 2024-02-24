@@ -31,12 +31,7 @@ function drawPlayer() {
 function recoverLife() {
     if (player.health < 100) {
         player.health = Math.min(100, player.health + 5);
-
-        if (!recoveryTimeout) {
-            recoveryTimeout = setTimeout(() => {
-                recoveryTimeout = null;
-            }, 1000);
-        }
+        player.isRecovering = true;
     }
 }
 
@@ -74,6 +69,7 @@ function killEnemiesInsideSafeZone() {
 }
 function updatePlayer() {
     isPlayerInSafeZone = false;
+    recoveryTimeout = 0;
 
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
@@ -85,9 +81,11 @@ function updatePlayer() {
     player.y = Math.max(0, Math.min(player.y, canvas.height));
 
     if (isPlayerInsideSafeZone()) {
-        if (!recoveryTimeout) recoverLife();
         killEnemiesInsideSafeZone();
         isPlayerInSafeZone = true;
+        recoveryTimeout = setTimeout(() => {
+            recoverLife();
+        }, 1000);
     }
 
     // Check for collision with enemies
@@ -98,50 +96,30 @@ function updatePlayer() {
     });
 }
 
-function handleEnemyCollision(enemy) {
-    clearInterval(damageInterval);
-    clearInterval(takeDamageTimeout);
-
-    canvas.style.filter = 'none';
-
+function applyDamage(damageAmount) {
     if (canTakeDamage) {
-        player.health -= 10;
-        // Apply blur effect temporarily
-        canvas.style.filter = 'blur(3px) brightness(1.3)';
+        player.health -= damageAmount;
+        canTakeDamage = false;
+
+        // Aplica o efeito de dano temporário
+        canvas.style.filter = 'blur(5px) brightness(2)';
+
         setTimeout(() => {
             canvas.style.filter = 'none';
-        }, 200);
+            canTakeDamage = true;
+        }, 1000);
     }
+}
+
+function handleEnemyCollision(enemy) {
+    canvas.style.filter = 'none';
 
     if (enemy.points <= player.points) {
         player.points -= enemy.points;
         clearInterval(enemy.animationInterval);
-        enemy.alive = false;
+        enemy.isAlive = false;
+        applyDamage(10);
+    } else {
+        applyDamage(15);
     }
-
-    // Set a flag to prevent immediate further damage
-    canTakeDamage = false;
-
-    // Allow player to take damage after 1 second
-    takeDamageTimeout = setTimeout(() => {
-        canTakeDamage = true;
-    }, 1000);
-
-    // Schedule damage every second
-    damageInterval = setInterval(() => {
-        if (enemy.alive && enemyHasCollisionWithPlayer(enemy)) {
-            player.health -= 10;
-
-            // Apply blur effect temporarily
-            canvas.style.filter = 'blur(5px) brightness(2)';
-            setTimeout(() => {
-                canvas.style.filter = 'none'; // Remova o filtro de desfoque
-            }, 200);
-
-            // Allow player to take damage after 1 second
-            setTimeout(() => {
-                canTakeDamage = true;
-            }, 1000);
-        }
-    }, 1000);
 }

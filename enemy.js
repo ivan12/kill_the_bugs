@@ -1,5 +1,6 @@
 function drawEnemies() {
     enemies.forEach(enemy => {
+        if (enemy.isAlive) {
         /* draw with priority >> choose sprite color */
         listSpritesEnemies[enemy.priority].draw(enemy.x, enemy.y, enemy.direction, enemy.speed);
 
@@ -29,6 +30,7 @@ function drawEnemies() {
             ctx.textBaseline = 'middle';
             ctx.fillText(pointsEnemyText, enemy.x, enemy.y - enemy.radius - 20);
         }
+    }
     });
 }
 
@@ -46,9 +48,12 @@ function updateEnemies() {
 
     /* Update enemies */
     enemies.forEach(enemy => {
-        moveEnemyAI(enemy);
-        // avoid the canvas borders
-        moveEnemyAIAwayFromEdge(enemy);
+        if (enemy.isAlive) {
+            moveEnemyAI(enemy);
+            // avoid the canvas borders
+            moveEnemyAIAwayFromEdge(enemy);
+        }
+        
     });
 }
 

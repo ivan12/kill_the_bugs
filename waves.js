@@ -18,7 +18,7 @@ function updateWaves() {
 }
 
 // Spawn enemies in waves every 3 seconds
-timeNextWave = setInterval(() => {
+setInterval(() => {
     if (current_screen === 'RUN_GAME') {
         if (nextWaveCalculateTime && nextWaveTimer <= 0) {
             wave++;
