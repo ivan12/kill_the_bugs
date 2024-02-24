@@ -67,9 +67,10 @@ function killEnemiesInsideSafeZone() {
         }
     });
 }
+
 function updatePlayer() {
     isPlayerInSafeZone = false;
-    recoveryTimeout = 0;
+    let recoveryInterval = 0;
 
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
@@ -83,9 +84,17 @@ function updatePlayer() {
     if (isPlayerInsideSafeZone()) {
         killEnemiesInsideSafeZone();
         isPlayerInSafeZone = true;
-        recoveryTimeout = setTimeout(() => {
-            recoverLife();
-        }, 1000);
+
+        // Inicia o setInterval apenas se não estiver ativo
+        if (!damageInterval) {
+            damageInterval = setInterval(() => {
+                applyDamage(10);
+            }, 1000);
+        }
+    } else {
+        // Limpa o setInterval se o jogador não estiver mais na zona segura
+        clearInterval(damageInterval);
+        damageInterval = null;
     }
 
     // Check for collision with enemies
@@ -96,30 +105,32 @@ function updatePlayer() {
     });
 }
 
-function applyDamage(damageAmount) {
-    if (canTakeDamage) {
-        player.health -= damageAmount;
-        canTakeDamage = false;
-
-        // Aplica o efeito de dano temporário
-        canvas.style.filter = 'blur(5px) brightness(2)';
-
-        setTimeout(() => {
-            canvas.style.filter = 'none';
-            canTakeDamage = true;
-        }, 1000);
-    }
-}
+let damageTimeout;
 
 function handleEnemyCollision(enemy) {
     canvas.style.filter = 'none';
 
     if (enemy.points <= player.points) {
         player.points -= enemy.points;
-        clearInterval(enemy.animationInterval);
         enemy.isAlive = false;
-        applyDamage(10);
+        applyDamageToPlayer(10); // Aplicar dano ao jogador
     } else {
-        applyDamage(15);
+        applyDamageToPlayer(15); // Aplicar dano ao jogador
+    }
+}
+
+function applyDamageToPlayer(damageAmount) {
+    if (canTakeDamage && !isPlayerInsideSafeZone()) {
+        player.health -= damageAmount;
+        canTakeDamage = false;
+
+        canvas.style.filter = 'blur(5px) brightness(2)';
+
+        if (!damageTimeout) {
+            damageTimeout = setInterval(() => {
+                canvas.style.filter = 'none';
+                canTakeDamage = true;
+            }, 1000);
+        }
     }
 }
