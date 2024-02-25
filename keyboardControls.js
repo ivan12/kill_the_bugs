@@ -41,6 +41,9 @@ document.addEventListener('keydown', e => {
             case 'i':
                 debug = !debug;
                 break;
+            case 'b':
+                showBGimage = !showBGimage;
+                break;
         }
 
         // Se não houver colisão, atualiza a posição do jogador
@@ -48,7 +51,7 @@ document.addEventListener('keydown', e => {
             // Se não houver colisão, atualiza a posição do jogador
             player.x = newX;
             player.y = newY;
-        } 
+        }
     }
 
     if (current_screen === 'RUN_GAME' || current_screen === 'PAUSE') {

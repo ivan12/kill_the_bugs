@@ -87,7 +87,7 @@ function updatePlayer() {
         isPlayerInSafeZone = true;
         if (!recoveringInterval || recoveringInterval > 1500) {
             recoveringInterval = setTimeout(() => {
-                recoverLife();
+                if(isPlayerInsideSafeZone()) irecoverLife();
             }, 1500);
         }
     } else {

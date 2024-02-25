@@ -3,6 +3,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const center = { x: canvas.width / 2, y: canvas.height / 2 };
 let debug = false;
+let showBGimage = true;
 
 /* frame hate */
 const targetFrameRate = 60;
@@ -42,8 +43,8 @@ let takeDamageTimeout = null;
 
 // Player life bar
 const playerHealthBarHeight = 25;
-const playerHealthBarWidth = 400;
-const posXBar = 320;
+const playerHealthBarWidth = canvas.width / 3;
+const posXBar = canvas.width / 3;
 const posYBar = 15;
 
 /* Player */

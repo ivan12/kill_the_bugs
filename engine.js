@@ -72,10 +72,15 @@ function gameLoop(timestamp) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Render background
-        drawBackground();
+        if (current_screen !== 'RUN_GAME') {
+            drawBackground();
+        }
 
         // Render game
         if (current_screen === 'RUN_GAME') {
+            if (showBGimage) {
+                drawBackground();
+            }
             runningGame();
         }
 
