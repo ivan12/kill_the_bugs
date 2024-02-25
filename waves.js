@@ -1,8 +1,7 @@
 function initializeWaves() {
     enemies = [];
-    for (let i = 0; i < 5; i++) {
-        spawnEnemy();
-    }
+    wave = 0;
+    spawnWave();
 }
 
 function updateWaves() {
@@ -17,14 +16,12 @@ function updateWaves() {
     }
 
     if (nextWaveTimer > 0) {
-        timeNextWave = setInterval(() => {
+        timeNextWave = setTimeout(() => {
             if (current_screen === 'RUN_GAME') {
                 nextWaveTimer -= 0.1; // Atualizar o tempo restante para a próxima wave
             }
         }, 100);
     }
-    
-
 }
 
 function spawnWave() {
@@ -35,8 +32,8 @@ function spawnWave() {
     if (wave % 5 === 0 && !boss) {
         spawnBoss();
     } else {
-        let numEnemies = Math.floor(Math.random() * 8) + 3;
-        for (let i = 0; i < numEnemies; i++) {
+        let numEnemiesPerWaves = Math.floor(Math.random() * 8) + 3;
+        for (let i = 0; i < numEnemiesPerWaves; i++) {
             spawnEnemy();
         }
     }
@@ -56,4 +53,3 @@ function spawnWave() {
 
     waveIsRunning = true;
 }
-

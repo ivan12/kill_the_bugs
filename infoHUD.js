@@ -41,14 +41,13 @@ function drawInfoHUD() {
                     60 + distanceDisplayIAEnemy
                 );
             });
+            ctx.fillText(`Player: `, canvas.width - 270, 310);
+            ctx.fillText(`- Life: ${player.health}`, canvas.width - 230, 340);
+            ctx.fillText(`- IsMoving: ${player.isMoving}`, canvas.width - 230, 365);
+            ctx.fillText(`- Direction: ${player.direction}`, canvas.width - 230, 390);
+            ctx.fillText(`- CanTakeDamage: ${canTakeDamage}`, canvas.width - 230, 415);
+            ctx.fillText(`- Recover Time: ${recoveryTimeout}`, canvas.width - 230, 445);
         }
-
-        ctx.fillText(`Player: `, canvas.width - 270, 310);
-        ctx.fillText(`- Life: ${player.health}`, canvas.width - 230, 340);
-        ctx.fillText(`- IsMoving: ${player.isMoving}`, canvas.width - 230, 365);
-        ctx.fillText(`- Direction: ${player.direction}`, canvas.width - 230, 390);
-        ctx.fillText(`- CanTakeDamage: ${canTakeDamage}`, canvas.width - 230, 415);
-        ctx.fillText(`- Recover Time: ${recoveryTimeout}`, canvas.width - 230, 445);
 
         ctx.fillText(`Dica: Fique com sua equipe`, 360, 780);
 

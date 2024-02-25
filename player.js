@@ -33,6 +33,7 @@ function recoverLife() {
         player.health = Math.min(100, player.health + 5);
         player.isRecovering = true;
         recoveringInterval = 0;
+        recoveringInterval = undefined;
     }
 }
 
@@ -85,8 +86,8 @@ function updatePlayer() {
         killEnemiesInsideSafeZone();
         isPlayerInSafeZone = true;
         if (!recoveringInterval || recoveringInterval > 1500) {
-            recoveringInterval = setInterval(() => {
-                if (isPlayerInsideSafeZone()) recoverLife();
+            recoveringInterval = setTimeout(() => {
+                recoverLife();
             }, 1500);
         }
     } else {
