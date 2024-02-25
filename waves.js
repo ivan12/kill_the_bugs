@@ -6,57 +6,54 @@ function initializeWaves() {
 }
 
 function updateWaves() {
-    if (enemies.length === 0) {
-        nextWaveCalculateTime = false;
-    }
-    if (enemies.length === 0 && nextWaveCalculateTime === false) {
-        nextWaveCalculateTime = true;
+    if (enemies.length === 0 && waveIsRunning === true) {
+        waveIsRunning = false;
         nextWaveTimer = WAVES_TIME;
         bossMaxHealth = wave * 5;
         return;
     }
+    if (nextWaveTimer <= 0 && !waveIsRunning) {
+        spawnWave();
+    }
+
+    if (nextWaveTimer > 0) {
+        timeNextWave = setInterval(() => {
+            if (current_screen === 'RUN_GAME') {
+                nextWaveTimer -= 0.1; // Atualizar o tempo restante para a próxima wave
+            }
+        }, 100);
+    }
+    
+
 }
 
-// Spawn enemies in waves every 3 seconds
-setInterval(() => {
-    if (current_screen === 'RUN_GAME') {
-        if (nextWaveCalculateTime && nextWaveTimer <= 0) {
-            wave++;
-            player.points = getRandomFibonacciNumber();
-            safeZone.teamPoints = simulateTeamPoints(5);
+function spawnWave() {
+    wave++;
+    player.points = getRandomFibonacciNumber();
+    safeZone.teamPoints = simulateTeamPoints(5);
 
-            if (wave % 5 === 0 && !boss) {
-                spawnBoss();
-                nextWaveCalculateTime = false;
-            } else {
-                /* Gera numero de inimigos de 3 a 10 por wave */
-                let numEnemies = Math.floor(Math.random() * 8) + 3;
-                for (let i = 0; i < numEnemies; i++) {
-                    spawnEnemy();
-                }
-                nextWaveCalculateTime = false;
-            }
-
-            if (!boss) {
-                wavesUntilZoneChange--;
-
-                if (wavesUntilZoneChange <= 0 || safeZone.moveAnotherPlace) {
-                    // change position Safe Zone
-                    safeZone.x = Math.random() * canvas.width;
-                    safeZone.y = Math.random() * canvas.height;
-
-                    // reset counter time next wave
-                    wavesUntilZoneChange = wavesPerZoneChange;
-                }
-            }
+    if (wave % 5 === 0 && !boss) {
+        spawnBoss();
+    } else {
+        let numEnemies = Math.floor(Math.random() * 8) + 3;
+        for (let i = 0; i < numEnemies; i++) {
+            spawnEnemy();
         }
     }
-}, nextWaveTimer * 1000);
 
-setInterval(() => {
-    if (current_screen === 'RUN_GAME') {
-        if (nextWaveTimer > 0) {
-            nextWaveTimer -= 0.1;
+    if (!boss) {
+        wavesUntilZoneChange--;
+
+        if (wavesUntilZoneChange <= 0 || safeZone.moveAnotherPlace) {
+            // Change position Safe Zone
+            safeZone.x = Math.random() * canvas.width;
+            safeZone.y = Math.random() * canvas.height;
+
+            // Reset counter time for the next wave
+            wavesUntilZoneChange = wavesPerZoneChange;
         }
     }
-}, 100);
+
+    waveIsRunning = true;
+}
+

@@ -32,6 +32,7 @@ function recoverLife() {
     if (player.health < 100) {
         player.health = Math.min(100, player.health + 5);
         player.isRecovering = true;
+        recoveringInterval = 0;
     }
 }
 
@@ -70,7 +71,6 @@ function killEnemiesInsideSafeZone() {
 
 function updatePlayer() {
     isPlayerInSafeZone = false;
-    let recoveryInterval = 0;
 
     if (player.health <= 0) {
         current_screen = 'GAME_OVER';
@@ -84,17 +84,13 @@ function updatePlayer() {
     if (isPlayerInsideSafeZone()) {
         killEnemiesInsideSafeZone();
         isPlayerInSafeZone = true;
-
-        // Inicia o setInterval apenas se não estiver ativo
-        if (!damageInterval) {
-            damageInterval = setInterval(() => {
-                applyDamage(10);
-            }, 1000);
+        if (!recoveringInterval || recoveringInterval > 1500) {
+            recoveringInterval = setInterval(() => {
+                if (isPlayerInsideSafeZone()) recoverLife();
+            }, 1500);
         }
     } else {
-        // Limpa o setInterval se o jogador não estiver mais na zona segura
-        clearInterval(damageInterval);
-        damageInterval = null;
+        recoveringInterval = undefined;
     }
 
     // Check for collision with enemies
@@ -126,11 +122,12 @@ function applyDamageToPlayer(damageAmount) {
 
         canvas.style.filter = 'blur(5px) brightness(2)';
 
-        if (!damageTimeout) {
+        if (!damageTimeout || damageTimeout > 500) {
             damageTimeout = setInterval(() => {
                 canvas.style.filter = 'none';
                 canTakeDamage = true;
-            }, 1000);
+                damageTimeout = 0;
+            }, 500);
         }
     }
 }

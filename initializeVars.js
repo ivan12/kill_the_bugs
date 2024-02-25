@@ -37,7 +37,7 @@ let current_screen = 'START';
 
 /* Intervals timeout */
 let blurInterval = null;
-let damageInterval = null;
+let recoveringInterval = null;
 let takeDamageTimeout = null;
 
 // Player life bar
@@ -58,13 +58,14 @@ const spritePlayerImage = new Image();
 spritePlayerImage.src = './imgs/sprites/player.png';
 const spritePlayer = new SpritePlayerAnimation(ctx, spritePlayerImage, 64, 64, 4, 4);
 
+// points: getRandomFibonacciNumber()
 const player = {
     direction: 'right',
     health: 100,
     height: 64,
     isMoving: false,
     isRecovering: false,
-    points: getRandomFibonacciNumber(),
+    points: 22,
     radius: 22,
     speed: 7,
     width: 64,
@@ -101,7 +102,7 @@ const listSpritesEnemies = [spriteEnemyGreen, spriteEnemyYellow, spriteEnemyRed]
 /* Waves config */
 const WAVES_TIME = 3;
 const wavesPerZoneChange = 3;
-let nextWaveCalculateTime = false;
+let waveIsRunning = true;
 let nextWaveTimer = WAVES_TIME;
 let wave = 1;
 let wavesUntilZoneChange = wavesPerZoneChange;

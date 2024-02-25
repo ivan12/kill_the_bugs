@@ -43,13 +43,18 @@ function drawVisionRadius(enemy) {
 }
 
 function updateEnemies() {
-    /* Remove enemies dead */
+    /* Remove enemies dead - garbage_collection  */
     enemies = enemies.filter(enemy => enemy.isAlive === true);
 
     /* Update enemies */
     enemies.forEach(enemy => {
         if (enemy.isAlive) {
+            // IA actions
             moveEnemyAI(enemy);
+            
+            // avoid the safe zone
+            moveEnemyAIAwaySafeZone(enemy);
+
             // avoid the canvas borders
             moveEnemyAIAwayFromEdge(enemy);
         }
